@@ -1,6 +1,3 @@
-
-
-
 #include<SFML/Graphics.hpp>
 #include<SFML/Window.hpp>
 #include<SFML/Network.hpp>
@@ -9,12 +6,13 @@
 #include<iostream>
 
 #include"Game.h"
+#include "MainGameLoop.h"
 
 int main() {
-	bool debug = true;
-	Game game;
+	bool dev = true;
+	ee::Game game;
 
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(1440, 810), "Islander!");
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
 
@@ -27,12 +25,19 @@ int main() {
 				window.close();
 		}
 
+		//LOGIC
+		game.io();
+		game.logic();
+
+		// RENDER
 		window.clear();
+
 		window.draw(shape);
 		game.draw(window);
+
 		window.display();
 
-		if (debug && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		if (dev && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			break;
 		}
 
@@ -40,3 +45,5 @@ int main() {
 
 	return 0;
 }
+
+

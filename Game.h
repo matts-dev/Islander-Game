@@ -5,12 +5,15 @@ namespace sf {
 	class RenderWindow;
 }
 
-class Game
-{
-public:
-	Game();
-	~Game();
-	void io();
-	void draw(sf::RenderWindow& window);
+namespace ee {
+	class Game
+	{
+	public:
+		Game();
+		~Game();
+		void io();
+		void logic();
+		void draw(sf::RenderWindow& window);
+	};
 };
 
