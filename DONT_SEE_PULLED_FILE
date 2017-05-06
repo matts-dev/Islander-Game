@@ -1,0 +1,1 @@
+Visual studio and xcode both require that files be added to the project even if they're within the src folder. So this will need to be manually done (which is a unique method dependent on the IDE being use)

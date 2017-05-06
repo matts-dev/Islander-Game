@@ -1,6 +1,6 @@
 #include "Textures.h"
 #include "ResourcePathHandler.h"
-#include<SFML\Graphics.hpp>
+#include<SFML/Graphics.hpp>
 #include<iostream>
 #include<exception>
 #include<string>
@@ -14,21 +14,26 @@ ee::Textures::Textures()
 	this->actorSheet = make_shared<sf::Texture>();
 	this->waterSheet = make_shared<sf::Texture>();
 
-	//string actorPath = "assets\\textures\\GenericActorSprite.png";
 	string actorPath = ResourcePathHandler::getActorLocation();
 	if (!this->actorSheet->loadFromFile(actorPath)) {
-		throw std::exception(("couldn't load texture: " + actorPath).c_str());
+        string exceptMsg = "couldn't load texture:" + actorPath;
+        std::cout<<exceptMsg<<std::endl;
+        throw exceptMsg;
 	}
 
-	string grassPath = "assets\\textures\\grass2.png";
-	if (!this->grassSheet->loadFromFile(grassPath)) {
-		throw std::exception(("couldn't load texture: " + grassPath).c_str());
-	}
-
-	string waterPath = "assets\\textures\\grass2.png";
-	if (!this->grassSheet->loadFromFile(waterPath)) {
-		throw std::exception(("couldn't load texture: " + waterPath).c_str());
-	}
+//	string grassPath = "assets\\textures\\grass2.png";
+//	if (!this->grassSheet->loadFromFile(grassPath)) {
+//        string exceptMsg = "couldn't load texture:" + grassPath;
+//        std::cout<<exceptMsg<<std::endl;
+//        throw exceptMsg;
+//    }
+//
+//	string waterPath = "assets\\textures\\grass2.png";
+//	if (!this->grassSheet->loadFromFile(waterPath)) {
+//        string exceptMsg = "couldn't load texture:" + waterPath;
+//        std::cout<<exceptMsg<<std::endl;
+//        throw exceptMsg;
+//	}
 
 }
 

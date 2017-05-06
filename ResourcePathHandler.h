@@ -16,5 +16,6 @@ namespace ee {
 	public:
 		//return correct paths regardless of platform
 		static std::string getActorLocation();
+        static std::string getGrassLocation();
 	};
 }

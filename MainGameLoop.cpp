@@ -6,13 +6,13 @@
 #include<iostream>
 
 #include"Game.h"
-#include "MainGameLoop.h"
 
 int main() {
 	bool dev = true;
 	ee::Game game;
 
-	sf::RenderWindow window(sf::VideoMode(1440, 810), "Islander!");
+    //round towards zero
+	sf::RenderWindow window(sf::VideoMode(static_cast<int>(1920*.65), static_cast<int>(1080*.65)), "Islander!");
 
 	while (window.isOpen())
 	{
