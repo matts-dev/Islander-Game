@@ -1,10 +1,9 @@
 #pragma once
 
-//CURRENTLY UNTESTED ON APPLE
 #if defined(_WIN32)
 
 #elif defined(__APPLE__)
-#include<ResourcePath.hpp> //update spelling when testing on apple for resource management
+#include<ResourcePath.hpp>
 #endif
 
 #include<string>
