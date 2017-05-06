@@ -1,4 +1,5 @@
 #include "Textures.h"
+#include "ResourcePathHandler.h"
 #include<SFML\Graphics.hpp>
 #include<iostream>
 #include<exception>
@@ -13,7 +14,8 @@ ee::Textures::Textures()
 	this->actorSheet = make_shared<sf::Texture>();
 	this->waterSheet = make_shared<sf::Texture>();
 
-	string actorPath = "assets\\textures\\GenericActorSprite.png";
+	//string actorPath = "assets\\textures\\GenericActorSprite.png";
+	string actorPath = ResourcePathHandler::getActorLocation();
 	if (!this->actorSheet->loadFromFile(actorPath)) {
 		throw std::exception(("couldn't load texture: " + actorPath).c_str());
 	}

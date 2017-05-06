@@ -22,10 +22,12 @@ ee::Game::Game()
 
 ee::Game::~Game()
 {
+
 }
 
 void ee::Game::io()
 {
+
 }
 
 void ee::Game::logic()
