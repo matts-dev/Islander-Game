@@ -13,8 +13,6 @@ int main() {
 	ee::Game game;
 
 	sf::RenderWindow window(sf::VideoMode(1440, 810), "Islander!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
 
 	while (window.isOpen())
 	{
@@ -31,10 +29,7 @@ int main() {
 
 		// RENDER
 		window.clear();
-
-		window.draw(shape);
 		game.draw(window);
-
 		window.display();
 
 		if (dev && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {

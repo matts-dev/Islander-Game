@@ -14,11 +14,14 @@ using std::shared_ptr;
 namespace ee {
 
 	class Actor;
+	class Textures;
 
 	class Game
 	{
 	private:
 		vector<shared_ptr<Actor>> players;
+		shared_ptr<Textures const> textures;
+
 
 	public:
 		Game();
