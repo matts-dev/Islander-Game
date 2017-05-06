@@ -1,13 +1,25 @@
 #pragma once
+#include<vector>
+#include<memory>
 
-//forward declarations
+//non ee forward declarations
 namespace sf {
 	class RenderWindow;
 }
 
+using std::vector;
+using std::shared_ptr;
+
+
 namespace ee {
+
+	class Actor;
+
 	class Game
 	{
+	private:
+		vector<shared_ptr<Actor>> players;
+
 	public:
 		Game();
 		~Game();

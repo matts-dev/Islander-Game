@@ -5,8 +5,13 @@
 #include<SFML/System.hpp>
 #include<SFML/Audio.hpp>
 
+#include"Actor.h"
+
+using std::make_shared;
+
 ee::Game::Game()
 {
+
 }
 
 ee::Game::~Game()
