@@ -1,5 +1,6 @@
 #include "Ship.h"
 #include "Textures.h"
+#include "RNG.h"
 #include <vector>
 
 //usings 
@@ -18,22 +19,25 @@ ee::Ship::Ship() : Actor()
 	this->temporarySprite = std::make_shared<sf::Sprite>(*texture);
 
 	vector<sf::Sprite> blocksToUse;
-	populateComponents(blocksToUse, *texture, 32);
+	int pixelsDimension = 32;
+	populateComponents(blocksToUse, *texture, pixelsDimension);
+
+	//there are 4 valid textures that have corner peices, they happen to be textures 0,1,2,3
+	auto rng = RNG::getInstance();
+	int rInt = rng->nextRandomInt() % 4;
 
 	//create the components of the ship
 	for (char i = 0; i < widthBlocks; ++i) {
 		for (char j = 0; j < heightBlocks; ++j) {
-			//TODO randomly pick a plank texture (currently only using 3rd)
-			sf::Sprite block = blocksToUse[3];
+			sf::Sprite block = blocksToUse[rInt];
 
-			block.setPosition(i * 32, j * 32);
+			//set sprites position to correct position in thread, also adjust for number of pixels in block
+			block.setPosition(static_cast<float>(i * pixelsDimension), static_cast<float>(j * pixelsDimension));
 
 			//insert a copied sprite based on the block used
 			this->components[getPosKey(i, j)] = make_shared<sf::Sprite>(block);
 		}
 	}
-
-
 }
 
 ee::Ship::~Ship()
@@ -76,6 +80,6 @@ short getPosKey(char x, char y) {
 
 	//OR in the bottom 8 bits of y value (x should now be displaced enough)
 	key |= y;
-	
+
 	return key;
 }
