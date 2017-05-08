@@ -12,8 +12,15 @@ namespace ee {
 	{
 		unordered_map<short, shared_ptr<sf::Sprite>> components;
 		shared_ptr<sf::Sprite> temporarySprite;
-		char const widthBlocks = 5;
+
+		//width should be event
+		char const widthBlocks = 6;
 		char const heightBlocks = 10;
+
+		//helper functions
+		void correctShipCorners();
+		/**convert x and y coordinate into a single short for indexing*/
+		short ee::Ship::getPosKey(char x, char y);
 	public:
 		Ship();
 		~Ship();
