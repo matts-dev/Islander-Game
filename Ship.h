@@ -20,7 +20,7 @@ namespace ee {
 		//helper functions
 		void correctShipCorners();
 		/**convert x and y coordinate into a single short for indexing*/
-		short ee::Ship::getPosKey(char x, char y);
+		short getPosKey(char x, char y);
 	public:
 		Ship();
 		~Ship();
