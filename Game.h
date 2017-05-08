@@ -20,6 +20,7 @@ namespace ee {
 	{
 	private:
 		vector<shared_ptr<Actor>> players;
+		vector<shared_ptr<Actor>> nonPlayerActors;
 		shared_ptr<Textures const> textures;
 
 

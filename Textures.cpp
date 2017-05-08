@@ -10,10 +10,9 @@ using std::weak_ptr;
 using std::string;
 ee::Textures::Textures()
 {
-	this->grassSheet = make_shared<sf::Texture>();
-	this->actorSheet = make_shared<sf::Texture>();
-	this->waterSheet = make_shared<sf::Texture>();
 
+	//Creat actor texture
+	this->actorSheet = make_shared<sf::Texture>();
 	string actorPath = ResourcePathHandler::getActorLocation();
 	if (!this->actorSheet->loadFromFile(actorPath)) {
         string exceptMsg = "couldn't load texture:" + actorPath;
@@ -21,6 +20,16 @@ ee::Textures::Textures()
         throw exceptMsg;
 	}
 
+	//create plank texture
+	this->plankSheet = make_shared<sf::Texture>();
+	string plankPath = ResourcePathHandler::getPlankSheetLocation();
+	if (!this->plankSheet->loadFromFile(plankPath)) {
+		string exceptMsg = "couldn't load texture:" + plankPath;
+		std::cout << exceptMsg << std::endl;
+		throw exceptMsg;
+	}
+
+//	this->grassSheet = make_shared<sf::Texture>();
 //	string grassPath = "assets\\textures\\grass2.png";
 //	if (!this->grassSheet->loadFromFile(grassPath)) {
 //        string exceptMsg = "couldn't load texture:" + grassPath;
@@ -28,6 +37,7 @@ ee::Textures::Textures()
 //        throw exceptMsg;
 //    }
 //
+//	this->waterSheet = make_shared<sf::Texture>();
 //	string waterPath = "assets\\textures\\grass2.png";
 //	if (!this->grassSheet->loadFromFile(waterPath)) {
 //        string exceptMsg = "couldn't load texture:" + waterPath;
@@ -53,6 +63,11 @@ and that texture cannot be corrupted by usage.
 shared_ptr<sf::Texture const> ee::Textures::getActorSheet() const
 {
 	return actorSheet;
+}
+
+shared_ptr<sf::Texture const> ee::Textures::getPlankSheet() const
+{
+	return plankSheet;
 }
 
 //SINGLETON LOGIC

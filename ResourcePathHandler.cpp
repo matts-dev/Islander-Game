@@ -15,9 +15,20 @@ ee::ResourcePathHandler::~ResourcePathHandler()
 std::string ee::ResourcePathHandler::getActorLocation()
 {
 	std::string standardPath = "assets//textures//genericActorSprite.png";
+	return platformDependentModification(standardPath);
+}
+
+std::string ee::ResourcePathHandler::getPlankSheetLocation()
+{
+	std::string plankPath = "assets//textures//plankSheet32.png";
+	return platformDependentModification(plankPath);
+}
+
+std::string ee::ResourcePathHandler::platformDependentModification(std::string& transform)
+{
 #if defined(_WIN32)
-	return standardPath;
+	return transform;
 #elif defined(__APPLE__)
-	return resourcePath() + "//" + standardPath;
+	return resourcePath() + "//" + transform;
 #endif
 }

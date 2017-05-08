@@ -16,6 +16,7 @@ namespace ee {
 
 		//----------- TEXTURES -----------
 		shared_ptr<sf::Texture> actorSheet;
+		shared_ptr<sf::Texture> plankSheet;
 		shared_ptr<sf::Texture> grassSheet;
 		shared_ptr<sf::Texture> waterSheet;
 
@@ -24,7 +25,7 @@ namespace ee {
 
 		// ----------- TEXTURE ACCESS -----------
 		shared_ptr<sf::Texture const> getActorSheet() const;
-
+		shared_ptr<sf::Texture const> getPlankSheet() const;
 
 		// ----------- SINGLETON -----------
 		static shared_ptr<Textures const> singleton;

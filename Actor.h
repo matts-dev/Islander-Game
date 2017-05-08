@@ -6,14 +6,17 @@
 using std::shared_ptr;
 
 namespace ee {
+	/*
+	Abstract class that all game world objects should inherit from.
+	*/
 	class Actor
 	{
-		shared_ptr<sf::Sprite> sprite;
 	public:
-		Actor(const sf::Texture& texture);
+		Actor();
 		~Actor();
 
-		void draw(sf::RenderWindow& window);
+		//pure virtual function that must be overriden.
+		virtual void draw(sf::RenderWindow& window) const = 0;
 	};
 };
 
