@@ -1,7 +1,7 @@
 #pragma once
 #include"Actor.h"
 #include<memory>
-#include<SFML\Graphics.hpp>
+#include<SFML/Graphics.hpp>
 
 using std::shared_ptr;
 
