@@ -9,17 +9,13 @@ using std::make_shared;
 using std::shared_ptr;
 
 //foward declarations
-void populateComponents(std::vector<sf::Sprite>& container, const sf::Texture& texture, int dimension);
+//void createSpriteBlocks(std::vector<sf::Sprite>& container, const sf::Texture& texture, int dimension);
 
 ee::Ship::Ship() : Actor()
 {
-	auto textureHolder = Textures::getInstance();
-	auto texture = textureHolder->getPlankSheet();
-	this->temporarySprite = std::make_shared<sf::Sprite>(*texture);
+	initPlankBlocks();
+	int pixelsDimension = plankBlocks[0].getTextureRect().width;
 
-	int pixelsDimension = 32;
-	vector<sf::Sprite> plankBlocks;
-	populateComponents(plankBlocks, *texture, pixelsDimension);
 
 	//there are 4 valid textures that have corner peices, they happen to be textures 0,1,2,3
 	auto rng = RNG::getInstance();
@@ -47,10 +43,6 @@ ee::Ship::~Ship()
 
 void ee::Ship::draw(sf::RenderWindow & window) const
 {
-	//for debugging
-	if (temporarySprite) {
-		//window.draw(*temporarySprite);
-	}
 
 	//iterate over the entire components and draw, STL gaurantees iterators are O(n)
 	for (auto it : this->components) {
@@ -61,17 +53,17 @@ void ee::Ship::draw(sf::RenderWindow & window) const
 }
 
 
-void populateComponents(std::vector<sf::Sprite>& container, const sf::Texture& texture, int dimension) {
-	container.clear();
-	//create a sprite for every block in the sheet
-	for (int i = 0; i < 12; ++i) {
-		sf::Sprite temp(texture, sf::IntRect(0, i * dimension, dimension, dimension));
-
-		//make a copy into the container
-		container.push_back(temp);
-
-	}
-}
+//void createSpriteBlocks(std::vector<sf::Sprite>& container, const sf::Texture& texture, int dimension) {
+//	container.clear();
+//	//create a sprite for every block in the sheet
+//	for (int i = 0; i < 12; ++i) {
+//		sf::Sprite temp(texture, sf::IntRect(0, i * dimension, dimension, dimension));
+//
+//		//make a copy into the container
+//		container.push_back(temp);
+//
+//	}
+//}
 
 /** puts two characters into a short via bit shifting */
 short ee::Ship::getPosKey(char x, char y) {
@@ -84,6 +76,25 @@ short ee::Ship::getPosKey(char x, char y) {
 	key |= y;
 
 	return key;
+}
+
+void ee::Ship::initPlankBlocks()
+{
+	//one time init
+	if (plankBlocks.size() == 0) {
+
+		auto textureHolder = Textures::getInstance();
+		auto texture = textureHolder->getPlankSheet();
+		int pixelDimension = 32;
+
+		//create a sprite for every block in the sheet
+		for (int i = 0; i < 12; ++i) {
+			sf::Sprite temp(*texture, sf::IntRect(0, i * pixelDimension, pixelDimension, pixelDimension));
+
+			//make a copy into the container
+			plankBlocks.push_back(temp);
+		}
+	}
 }
 
 void ee::Ship::correctShipCorners()
@@ -113,12 +124,8 @@ void ee::Ship::correctShipCorners()
 	}
 
 	//Assign corner peices
-	auto textureHolder = Textures::getInstance();
-	auto texture = textureHolder->getPlankSheet();
-	this->temporarySprite = std::make_shared<sf::Sprite>(*texture);
-	int pixelsDimension = 32;
-	vector<sf::Sprite> plankBlocks;
-	populateComponents(plankBlocks, *texture, pixelsDimension);
+	initPlankBlocks();
+	int pixelsDimension = plankBlocks[0].getTextureRect().width;
 
 	//add corner peices
 	for (unsigned int i = 0; i < leftCornersTop.size(); ++i) {
@@ -133,7 +140,7 @@ void ee::Ship::correctShipCorners()
 		auto ori = rightCorner->getOrigin();
 		ori.x += rightCorner->getTextureRect().width;
 		rightCorner->setOrigin(ori);
-		rightCorner->setPosition(static_cast<float>(rightCornersTop[i] * pixelsDimension),static_cast<float>(i * pixelsDimension));
+		rightCorner->setPosition(static_cast<float>(rightCornersTop[i] * pixelsDimension), static_cast<float>(i * pixelsDimension));
 		this->components[getPosKey(rightCornersTop[i], i)] = rightCorner;
 	}
 }

@@ -1,17 +1,21 @@
 #pragma once
 #include"Actor.h"
 #include<memory>
+#include<vector>
 #include<unordered_map>
 #include<SFML/Graphics.hpp>
 
 using std::shared_ptr;
 using std::unordered_map;
+using std::vector;
 
 namespace ee {
 	class Ship : public Actor
 	{
 		unordered_map<short, shared_ptr<sf::Sprite>> components;
-		shared_ptr<sf::Sprite> temporarySprite;
+		vector<sf::Sprite> plankBlocks;
+		void initPlankBlocks();
+
 
 		//width should be event
 		char const widthBlocks = 6;
