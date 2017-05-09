@@ -20,9 +20,17 @@ namespace ee {
 		//width should be event
 		char const widthBlocks = 6;
 		char const heightBlocks = 10;
+		vector<int> topLeftCorners;
+		vector<int> topRightCorners;
+		vector<int> bottomRightCorners;
+		vector<int> bottomLeftCorners;
 
-		//helper functions
-		void correctShipCorners();
+		//constructor helper functions
+		void createRectangleOfPlankSprites();
+		void handleShipCorners();
+		void calculateCornerPositions();
+		void positionCornerPeices();
+		void trimEdgeBlocksAway();
 		/**convert x and y coordinate into a single short for indexing*/
 		short getPosKey(char x, char y);
 	public:

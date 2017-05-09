@@ -8,33 +8,11 @@ using std::vector;
 using std::make_shared;
 using std::shared_ptr;
 
-//foward declarations
-//void createSpriteBlocks(std::vector<sf::Sprite>& container, const sf::Texture& texture, int dimension);
-
 ee::Ship::Ship() : Actor()
 {
 	initPlankBlocks();
-	int pixelsDimension = plankBlocks[0].getTextureRect().width;
-
-
-	//there are 4 valid textures that have corner peices, they happen to be textures 0,1,2,3
-	auto rng = RNG::getInstance();
-	int rInt = rng->nextRandomInt() % 4;
-
-	//create the components of the ship
-	for (char i = 0; i < widthBlocks; ++i) {
-		for (char j = 0; j < heightBlocks; ++j) {
-			sf::Sprite block = plankBlocks[rInt];
-
-			//set sprites position to correct position in thread, also adjust for number of pixels in block
-			block.setPosition(static_cast<float>(i * pixelsDimension), static_cast<float>(j * pixelsDimension));
-
-			//insert a copied sprite based on the block used
-			this->components[getPosKey(i, j)] = make_shared<sf::Sprite>(block);
-		}
-	}
-
-	correctShipCorners();
+	createRectangleOfPlankSprites();
+	handleShipCorners();
 }
 
 ee::Ship::~Ship()
@@ -51,19 +29,6 @@ void ee::Ship::draw(sf::RenderWindow & window) const
 
 
 }
-
-
-//void createSpriteBlocks(std::vector<sf::Sprite>& container, const sf::Texture& texture, int dimension) {
-//	container.clear();
-//	//create a sprite for every block in the sheet
-//	for (int i = 0; i < 12; ++i) {
-//		sf::Sprite temp(texture, sf::IntRect(0, i * dimension, dimension, dimension));
-//
-//		//make a copy into the container
-//		container.push_back(temp);
-//
-//	}
-//}
 
 /** puts two characters into a short via bit shifting */
 short ee::Ship::getPosKey(char x, char y) {
@@ -97,11 +62,37 @@ void ee::Ship::initPlankBlocks()
 	}
 }
 
-void ee::Ship::correctShipCorners()
+void ee::Ship::createRectangleOfPlankSprites()
 {
-	vector<int> leftCornersTop;
-	vector<int> rightCornersTop;
+	int pixelsDimension = plankBlocks[0].getTextureRect().width;
 
+	//there are 4 valid textures that have corner peices, they happen to be textures 0,1,2,3
+	auto rng = RNG::getInstance();
+	int rInt = rng->nextRandomInt() % 4;
+
+	//create the components of the ship
+	for (char i = 0; i < widthBlocks; ++i) {
+		for (char j = 0; j < heightBlocks; ++j) {
+			sf::Sprite block = plankBlocks[rInt];
+
+			//set sprites position to correct position in thread, also adjust for number of pixels in block
+			block.setPosition(static_cast<float>(i * pixelsDimension), static_cast<float>(j * pixelsDimension));
+
+			//insert a copied sprite based on the block used
+			this->components[getPosKey(i, j)] = make_shared<sf::Sprite>(block);
+		}
+	}
+}
+
+void ee::Ship::handleShipCorners()
+{
+	calculateCornerPositions();
+	positionCornerPeices();
+	trimEdgeBlocksAway();
+}
+
+void ee::Ship::calculateCornerPositions()
+{
 	//Calculate positions
 	for (int i = 0; i < this->widthBlocks / 2; ++i) {
 		//for every row, move corner left by i (integer division just works for left with odd)
@@ -118,21 +109,24 @@ void ee::Ship::correctShipCorners()
 
 		//the index for this vectors represents the row in the ship that will change.
 		//ie row 0 in ship will have have its corner column numbers at vector index 0
-		leftCornersTop.push_back(leftCornerForRow);
-		rightCornersTop.push_back(rightCornerForRow);
+		topLeftCorners.push_back(leftCornerForRow);
+		topRightCorners.push_back(rightCornerForRow);
 
 	}
+}
 
+void ee::Ship::positionCornerPeices()
+{
 	//Assign corner peices
 	initPlankBlocks();
 	int pixelsDimension = plankBlocks[0].getTextureRect().width;
 
 	//add corner peices
-	for (unsigned int i = 0; i < leftCornersTop.size(); ++i) {
+	for (unsigned int i = 0; i < topLeftCorners.size(); ++i) {
 		//At the left corner position, set it to a corner sprite
 		auto leftCorner = make_shared<sf::Sprite>(plankBlocks[8]);
-		leftCorner->setPosition(static_cast<float>(leftCornersTop[i] * pixelsDimension), static_cast<float>(i * pixelsDimension));
-		this->components[getPosKey(leftCornersTop[i], i)] = leftCorner;
+		leftCorner->setPosition(static_cast<float>(topLeftCorners[i] * pixelsDimension), static_cast<float>(i * pixelsDimension));
+		this->components[getPosKey(topLeftCorners[i], i)] = leftCorner;
 
 		//At the right corner position, set it to a corner peice
 		auto rightCorner = make_shared<sf::Sprite>(plankBlocks[8]);
@@ -140,7 +134,22 @@ void ee::Ship::correctShipCorners()
 		auto ori = rightCorner->getOrigin();
 		ori.x += rightCorner->getTextureRect().width;
 		rightCorner->setOrigin(ori);
-		rightCorner->setPosition(static_cast<float>(rightCornersTop[i] * pixelsDimension), static_cast<float>(i * pixelsDimension));
-		this->components[getPosKey(rightCornersTop[i], i)] = rightCorner;
+		rightCorner->setPosition(static_cast<float>(topRightCorners[i] * pixelsDimension), static_cast<float>(i * pixelsDimension));
+		this->components[getPosKey(topRightCorners[i], i)] = rightCorner;
+	}
+}
+
+void ee::Ship::trimEdgeBlocksAway()
+{
+	for (unsigned int i = 0; i < topLeftCorners.size(); ++i) {
+		int colIndex = topLeftCorners[i];
+		for (int j = 0; j < colIndex; ++j) {
+			//trim component on left
+			components.erase(getPosKey(i, j));
+
+			//trim component on right (-1 to correct for starting at 0)
+			int rightIndex = widthBlocks - i - 1;
+			components.erase(getPosKey(rightIndex, j));
+		}
 	}
 }
