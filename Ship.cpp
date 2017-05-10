@@ -71,6 +71,8 @@ short ee::Ship::getPosKey(char x, char y) {
 	return key;
 }
 
+std::vector<sf::Sprite> ee::Ship::plankBlocks;
+
 void ee::Ship::initPlankBlocks()
 {
 	//one time init
@@ -85,7 +87,7 @@ void ee::Ship::initPlankBlocks()
 			sf::Sprite temp(*texture, sf::IntRect(0, i * pixelDimension, pixelDimension, pixelDimension));
 
 			//make a copy into the container
-			plankBlocks.push_back(temp);
+			plankBlocks.emplace_back(temp);
 		}
 	}
 }
@@ -137,8 +139,8 @@ void ee::Ship::calculateCornerPositions()
 
 		//the index for this vectors represents the row in the ship that will change.
 		//ie row 0 in ship will have have its corner column numbers at vector index 0
-		topLeftCorners.push_back(leftCornerForRow);
-		topRightCorners.push_back(rightCornerForRow);
+		topLeftCorners.emplace_back(leftCornerForRow);
+		topRightCorners.emplace_back(rightCornerForRow);
 
 	}
 }

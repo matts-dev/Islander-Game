@@ -13,8 +13,8 @@ namespace ee {
 	class Ship : public Actor
 	{
 		//Texture blocks to use for copying
-		vector<sf::Sprite> plankBlocks;
-		void initPlankBlocks();
+		static vector<sf::Sprite> plankBlocks;
+		static void initPlankBlocks();
 
 		//Actual components that make up the ship (blocks you see)
 		unordered_map<short, shared_ptr<sf::Sprite>> components;

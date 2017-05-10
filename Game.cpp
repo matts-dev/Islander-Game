@@ -19,10 +19,10 @@ ee::Game::Game()
 	textures = Textures::getInstance();
 	shared_ptr<sf::Texture const> actorTexture = textures->getActorSheet();
 	auto player1 = make_shared<Player>(*actorTexture);
-	players.push_back(player1);
+	players.emplace_back(player1);
 
 	auto ship = make_shared<Ship>();
-	nonPlayerActors.push_back(ship);
+	nonPlayerActors.emplace_back(ship);
 	ship->setPosition(500.f, 500.f);
 
 	developerMode = true;
@@ -66,6 +66,10 @@ void ee::Game::io()
 				float rot = shipPtr->getRotation();
 				shipPtr->setRotation(rot - 3.f);
 			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+			auto newShip = make_shared<Ship>();
+			nonPlayerActors.emplace_back(newShip);
 		}
 	}
 }
