@@ -14,7 +14,7 @@ ee::ResourcePathHandler::~ResourcePathHandler()
 //platform dependent implementations
 std::string ee::ResourcePathHandler::getActorLocation()
 {
-	std::string standardPath = "assets//textures//genericActorSprite.png";
+	std::string standardPath = "assets//textures//Man16x16packed.png";
 	return platformDependentModification(standardPath);
 }
 

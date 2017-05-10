@@ -18,7 +18,7 @@ ee::Game::Game()
 {
 	textures = Textures::getInstance();
 	shared_ptr<sf::Texture const> actorTexture = textures->getActorSheet();
-	auto player1 = make_shared<Player>(*actorTexture);
+	auto player1 = make_shared<Player>(*actorTexture, 32, 32);
 	players.emplace_back(player1);
 
 	auto ship = make_shared<Ship>();
