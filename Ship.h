@@ -12,18 +12,20 @@ using std::vector;
 namespace ee {
 	class Ship : public Actor
 	{
-		unordered_map<short, shared_ptr<sf::Sprite>> components;
+		//Texture blocks to use for copying
 		vector<sf::Sprite> plankBlocks;
 		void initPlankBlocks();
 
+		//Actual components that make up the ship (blocks you see)
+		unordered_map<short, shared_ptr<sf::Sprite>> components;
 
 		//width should be event
-		char const widthBlocks = 6;
-		char const heightBlocks = 10;
+		char const widthBlocks = 7;
+		char const heightBlocks = 15;
+
+		//index = row, value = col; ie vector[row] returns col, 
 		vector<int> topLeftCorners;
 		vector<int> topRightCorners;
-		vector<int> bottomRightCorners;
-		vector<int> bottomLeftCorners;
 
 		//constructor helper functions
 		void createRectangleOfPlankSprites();
@@ -31,11 +33,18 @@ namespace ee {
 		void calculateCornerPositions();
 		void positionCornerPeices();
 		void trimEdgeBlocksAway();
+		void calculateCenterLocation();
+
 		/**convert x and y coordinate into a single short for indexing*/
 		short getPosKey(char x, char y);
 	public:
 		Ship();
-		~Ship();
+		virtual ~Ship();
+
+		void setRotation(float rotationInDegrees);
+		float getRotation();
+
+		void setPosition(float x, float y);
 
 		// Inherited via Actor
 		virtual void draw(sf::RenderWindow & window) const override;

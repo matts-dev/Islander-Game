@@ -12,7 +12,7 @@ namespace ee {
 		shared_ptr<sf::Sprite> sprite;
 	public:
 		Player(const sf::Texture& texture);
-		~Player();
+		virtual ~Player();
 
 		void draw(sf::RenderWindow& window) const override;
 	};

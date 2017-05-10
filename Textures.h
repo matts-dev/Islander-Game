@@ -10,7 +10,7 @@ namespace sf {
 using std::shared_ptr;
 using std::weak_ptr;
 namespace ee {
-	class Textures
+	class Textures final
 	{
 		Textures();
 

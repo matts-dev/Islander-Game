@@ -13,7 +13,7 @@ namespace ee {
 	{
 	public:
 		Actor();
-		~Actor();
+		virtual ~Actor();
 
 		//pure virtual function that must be overriden.
 		virtual void draw(sf::RenderWindow& window) const = 0;

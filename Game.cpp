@@ -23,6 +23,9 @@ ee::Game::Game()
 
 	auto ship = make_shared<Ship>();
 	nonPlayerActors.push_back(ship);
+	ship->setPosition(500.f, 500.f);
+
+	developerMode = true;
 }
 
 ee::Game::~Game()
@@ -32,7 +35,39 @@ ee::Game::~Game()
 
 void ee::Game::io()
 {
+	if (developerMode) {
+		//Note: the below 4 if statements are just for testing, this gives higher movement speed in angles
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+			//auto ship->getX();
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+			//for now will be the first ship of the game
+			auto actorPtr = nonPlayerActors[0];
+			auto shipPtr = std::dynamic_pointer_cast<Ship>(actorPtr);
+			if (shipPtr) {
+				float rot = shipPtr->getRotation();
+				shipPtr->setRotation(rot + 3.f);
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+			//for now will be the first ship of the game
+			auto actorPtr = nonPlayerActors[0];
+			auto shipPtr = std::dynamic_pointer_cast<Ship>(actorPtr);
+			if (shipPtr) {
+				float rot = shipPtr->getRotation();
+				shipPtr->setRotation(rot - 3.f);
+			}
+		}
+	}
 }
 
 void ee::Game::logic()

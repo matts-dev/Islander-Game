@@ -3,6 +3,6 @@ class Cell
 {
 public:
 	Cell();
-	~Cell();
+	virtual ~Cell();
 };
 

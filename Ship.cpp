@@ -13,11 +13,39 @@ ee::Ship::Ship() : Actor()
 	initPlankBlocks();
 	createRectangleOfPlankSprites();
 	handleShipCorners();
+	calculateCenterLocation();
+
 }
 
 ee::Ship::~Ship()
 {
 }
+
+void ee::Ship::setRotation(float rotationInDegrees)
+{
+	//update the rotation for every component.
+	for (auto it : components) {
+		(it.second)->setRotation(rotationInDegrees);
+	}
+}
+
+/** Get rotation in degrees */
+float ee::Ship::getRotation()
+{
+	//get first component of map
+	auto it = components.begin();
+	
+	//get rotation (should be updated in all components)
+	return (*it).second->getRotation();
+}
+
+void ee::Ship::setPosition(float x, float y)
+{
+	for (auto it : components) {
+		(it.second)->setPosition(x, y);
+	}
+}
+
 
 void ee::Ship::draw(sf::RenderWindow & window) const
 {
@@ -121,7 +149,7 @@ void ee::Ship::positionCornerPeices()
 	initPlankBlocks();
 	int pixelsDimension = plankBlocks[0].getTextureRect().width;
 
-	//add corner peices
+	//add top corner peices
 	for (unsigned int i = 0; i < topLeftCorners.size(); ++i) {
 		//At the left corner position, set it to a corner sprite
 		auto leftCorner = make_shared<sf::Sprite>(plankBlocks[8]);
@@ -130,19 +158,47 @@ void ee::Ship::positionCornerPeices()
 
 		//At the right corner position, set it to a corner peice
 		auto rightCorner = make_shared<sf::Sprite>(plankBlocks[8]);
-		rightCorner->setScale(-1.f, 1.f);
-		auto ori = rightCorner->getOrigin();
-		ori.x += rightCorner->getTextureRect().width;
-		rightCorner->setOrigin(ori);
+		auto rect = rightCorner->getTextureRect();
+		//flip the texture
+		//use a negative width - left + width because we're capturing a negative width, which means we need to offset by the width to capture the original texture
+		rightCorner->setTextureRect(sf::IntRect(rect.left + rect.width, rect.top, -rect.width, rect.height));
 		rightCorner->setPosition(static_cast<float>(topRightCorners[i] * pixelsDimension), static_cast<float>(i * pixelsDimension));
 		this->components[getPosKey(topRightCorners[i], i)] = rightCorner;
 	}
+
+	//BOTTOM CORNERS
+	//only place a single bottom corner peice
+	auto bottomLeftCorner = make_shared<sf::Sprite>(plankBlocks[8]);
+	auto bottomRightCorner = make_shared<sf::Sprite>(plankBlocks[8]);
+
+	//calculate positions
+	int lastRow = heightBlocks - 1;		//last row
+	int leftIndex = 0;					//first column
+	int rightIndex = widthBlocks - 1;	//last column
+
+	bottomLeftCorner->setPosition(static_cast<float>(leftIndex * pixelsDimension), static_cast<float>(lastRow * pixelsDimension));
+	bottomRightCorner->setPosition(static_cast<float>(rightIndex * pixelsDimension), static_cast<float>(lastRow * pixelsDimension));
+
+	//flip left corner block vertically
+	auto lRect = bottomLeftCorner->getTextureRect();
+	bottomLeftCorner->setTextureRect(sf::IntRect(lRect.left, lRect.top + lRect.height, lRect.width, -lRect.height));
+	
+	//flip right corner block vertically and horrizontally
+	auto rRect = bottomRightCorner->getTextureRect();
+	bottomRightCorner->setTextureRect(sf::IntRect(rRect.left + rRect.width, rRect.top + rRect.height, -rRect.width, -rRect.height));
+
+	this->components[getPosKey(leftIndex, lastRow)] = bottomLeftCorner;
+	this->components[getPosKey(rightIndex, lastRow)] = bottomRightCorner;
+
+
 }
 
 void ee::Ship::trimEdgeBlocksAway()
 {
+	// for every row in the ship
 	for (unsigned int i = 0; i < topLeftCorners.size(); ++i) {
 		int colIndex = topLeftCorners[i];
+		// for every block until you reach the corner (angled block) (columns)
 		for (int j = 0; j < colIndex; ++j) {
 			//trim component on left
 			components.erase(getPosKey(i, j));
@@ -151,5 +207,21 @@ void ee::Ship::trimEdgeBlocksAway()
 			int rightIndex = widthBlocks - i - 1;
 			components.erase(getPosKey(rightIndex, j));
 		}
+	}
+}
+
+void ee::Ship::calculateCenterLocation()
+{
+	//find the center position
+	int blockSize = plankBlocks[0].getTextureRect().width;
+	float centerX = widthBlocks / 2.0f * blockSize;
+	float centerY = heightBlocks / 2.0f * blockSize;
+
+	//change the origin for every sprite component
+	for (auto it : components) {
+		auto pos = (it.second)->getPosition();
+
+		(it.second)->setOrigin(centerX - pos.x, centerY - pos.y);
+		(it.second)->setPosition(0, 0);
 	}
 }

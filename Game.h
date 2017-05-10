@@ -23,7 +23,7 @@ namespace ee {
 		vector<shared_ptr<Actor>> nonPlayerActors;
 		shared_ptr<Textures const> textures;
 
-
+		bool developerMode;
 	public:
 		Game();
 		~Game();

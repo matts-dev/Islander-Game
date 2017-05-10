@@ -13,6 +13,7 @@ int main() {
 
     //round towards zero
 	sf::RenderWindow window(sf::VideoMode(static_cast<int>(1920*.65), static_cast<int>(1080*.65)), "Islander!");
+	window.setFramerateLimit(60);
 
 	while (window.isOpen())
 	{
