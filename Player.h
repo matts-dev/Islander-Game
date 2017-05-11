@@ -22,6 +22,10 @@ namespace ee {
 		virtual ~Player();
 
 		void draw(sf::RenderWindow& window) const override;
+
+		// Inherited via Actor
+		virtual void setScale(float scaleFactor) override;
+		virtual float getScale() override;
 	};
 };
 

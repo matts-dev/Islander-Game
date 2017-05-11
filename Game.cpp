@@ -71,6 +71,20 @@ void ee::Game::io()
 			auto newShip = make_shared<Ship>();
 			nonPlayerActors.emplace_back(newShip);
 		}
+		//change scale to smaller
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+			auto ship = nonPlayerActors[0];
+			auto player = players[0];
+			ship->setScale(ship->getScale() - 0.05f);
+			player->setScale(player->getScale() - 0.05f);
+		}
+		//change scale to larger
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
+			auto ship = nonPlayerActors[0];
+			auto player = players[0];
+			ship->setScale(ship->getScale() + 0.05f);
+			player->setScale(player->getScale() + 0.05f);
+		}
 	}
 }
 

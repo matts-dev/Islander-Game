@@ -58,6 +58,23 @@ void ee::Ship::draw(sf::RenderWindow & window) const
 
 }
 
+void ee::Ship::setScale(float scaleFactor)
+{
+	for (auto aComponent : components) {
+		aComponent.second->setScale(scaleFactor, scaleFactor);
+	}
+}
+
+float ee::Ship::getScale()
+{
+	auto aComponent = (components.begin())->second;
+
+	//scale should be same for x and y, so returning either will be accurate for scale.
+	return aComponent->getScale().x;
+
+
+}
+
 /** puts two characters into a short via bit shifting */
 short ee::Ship::getPosKey(char x, char y) {
 	short key = x;

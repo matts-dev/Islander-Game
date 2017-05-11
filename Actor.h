@@ -17,6 +17,8 @@ namespace ee {
 
 		//pure virtual function that must be overriden.
 		virtual void draw(sf::RenderWindow& window) const = 0;
+		virtual void setScale(float scaleFactor) = 0;
+		virtual float getScale() = 0;
 	};
 };
 

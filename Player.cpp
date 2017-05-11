@@ -43,3 +43,18 @@ void ee::Player::draw(sf::RenderWindow & window) const
 	window.draw(*currentSprite);
 
 }
+
+void ee::Player::setScale(float scaleFactor)
+{
+	//change scale for every image in the sprite sheet (this will update current sprite)
+	for (auto currentSprite : playerSpriteSheet) {
+		//do not differentiate between x and y
+		currentSprite->setScale(scaleFactor, scaleFactor);
+	}
+}
+
+float ee::Player::getScale()
+{
+	//seting scale does requires both x and y are same, so returning either does the job.
+	return currentSprite->getScale().x;
+}
