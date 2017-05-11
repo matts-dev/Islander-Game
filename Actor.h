@@ -11,14 +11,26 @@ namespace ee {
 	*/
 	class Actor
 	{
+	protected:
+		float moveSpeed;
 	public:
-		Actor();
+		Actor(float moveSpeed);
 		virtual ~Actor();
 
 		//pure virtual function that must be overriden.
 		virtual void draw(sf::RenderWindow& window) const = 0;
 		virtual void setScale(float scaleFactor) = 0;
 		virtual float getScale() = 0;
+
+		//Movement Functions
+		virtual void moveUp() = 0 ;
+		virtual void moveDown() = 0;
+		virtual void moveLeft() = 0;
+		virtual void moveRight() = 0;
+		virtual void moveUpLeft() = 0;
+		virtual void moveUpRight() = 0;
+		virtual void moveDownLeft() = 0;
+		virtual void moveDownRight() = 0;
 	};
 };
 

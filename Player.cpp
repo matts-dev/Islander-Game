@@ -26,11 +26,11 @@ void ee::Player::initSpriteSheet(const sf::Texture& texture, int widthPixels, in
 	}
 }
 
-ee::Player::Player(const sf::Texture& texture, int widthPixels, int heightPixels) : Actor(), playerSpriteSheet()
+ee::Player::Player(const sf::Texture& texture, int widthPixels, int heightPixels) : Actor(5.0f), playerSpriteSheet()
 {
 	initSpriteSheet(texture, widthPixels, heightPixels);
-	//currentSprite = make_shared<sf::Sprite>(texture);
-	currentSprite = playerSpriteSheet[0];
+	spriteIndex = 0;
+	currentSprite = playerSpriteSheet[spriteIndex];
 }
 
 
@@ -57,4 +57,66 @@ float ee::Player::getScale()
 {
 	//seting scale does requires both x and y are same, so returning either does the job.
 	return currentSprite->getScale().x;
+}
+
+void ee::Player::moveUp()
+{
+	currentSprite->move(0, -moveSpeed);
+	updateSpriteImage(2);
+}
+
+void ee::Player::moveDown()
+{
+	currentSprite->move(0, moveSpeed);
+	updateSpriteImage(0);
+}
+
+void ee::Player::moveLeft()
+{
+	currentSprite->move(-moveSpeed, 0);
+	updateSpriteImage(1);
+}
+
+void ee::Player::moveRight()
+{
+	currentSprite->move(moveSpeed, 0);
+	updateSpriteImage(3);
+
+}
+
+void ee::Player::moveUpLeft()
+{
+}
+
+void ee::Player::moveUpRight()
+{
+}
+
+void ee::Player::moveDownLeft()
+{
+}
+
+void ee::Player::moveDownRight()
+{
+}
+
+void ee::Player::updateSpriteImage(int correctColumn)
+{
+	//for every image column, there are two images. 
+	//thus, dividing the sprite index by 2 determines the column
+	if (spriteIndex / 2 != correctColumn) {
+
+		//Since there are two images for every column, the correct column is calculated by multiplying by 2
+		//since there are two images per column, you can determine if the first image or second image is loaded by modding by 
+		spriteIndex = correctColumn * 2 + spriteIndex % 2;
+
+		swapImagesToNewIndex();
+	}
+
+}
+
+void ee::Player::swapImagesToNewIndex()
+{
+	playerSpriteSheet[spriteIndex]->setPosition(currentSprite->getPosition());
+	currentSprite = playerSpriteSheet[spriteIndex];
 }

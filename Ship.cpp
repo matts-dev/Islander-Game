@@ -8,7 +8,7 @@ using std::vector;
 using std::make_shared;
 using std::shared_ptr;
 
-ee::Ship::Ship() : Actor()
+ee::Ship::Ship() : Actor(10.0f)
 {
 	initPlankBlocks();
 	createRectangleOfPlankSprites();
@@ -73,6 +73,38 @@ float ee::Ship::getScale()
 	return aComponent->getScale().x;
 
 
+}
+
+void ee::Ship::moveUp()
+{
+}
+
+void ee::Ship::moveDown()
+{
+}
+
+void ee::Ship::moveLeft()
+{
+}
+
+void ee::Ship::moveRight()
+{
+}
+
+void ee::Ship::moveUpLeft()
+{
+}
+
+void ee::Ship::moveUpRight()
+{
+}
+
+void ee::Ship::moveDownLeft()
+{
+}
+
+void ee::Ship::moveDownRight()
+{
 }
 
 /** puts two characters into a short via bit shifting */

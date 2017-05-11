@@ -21,15 +21,22 @@ namespace ee {
 	private:
 		vector<shared_ptr<Actor>> players;
 		vector<shared_ptr<Actor>> nonPlayerActors;
+		shared_ptr<Actor> player;
+		shared_ptr<Actor> controlTarget;
 		shared_ptr<Textures const> textures;
 
 		bool developerMode;
+
 	public:
 		Game();
 		~Game();
 		void io();
 		void logic();
 		void draw(sf::RenderWindow& window);
+
+		//helper functions
+	private:
+		void ioMovement();
 	};
 };
 

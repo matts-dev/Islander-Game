@@ -52,6 +52,14 @@ namespace ee {
 		// Inherited via Actor
 		virtual void setScale(float scaleFactor) override;
 		virtual float getScale() override;
+		virtual void moveUp() override;
+		virtual void moveDown() override;
+		virtual void moveLeft() override;
+		virtual void moveRight() override;
+		virtual void moveUpLeft() override;
+		virtual void moveUpRight() override;
+		virtual void moveDownLeft() override;
+		virtual void moveDownRight() override;
 	};
 };
 

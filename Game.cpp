@@ -19,6 +19,8 @@ ee::Game::Game()
 	textures = Textures::getInstance();
 	shared_ptr<sf::Texture const> actorTexture = textures->getActorSheet();
 	auto player1 = make_shared<Player>(*actorTexture, 16, 16);
+	controlTarget = player1;
+	player1->setScale(2.0f);
 	players.emplace_back(player1);
 
 	auto ship = make_shared<Ship>();
@@ -35,20 +37,8 @@ ee::Game::~Game()
 
 void ee::Game::io()
 {
-	if (developerMode) {
-		//Note: the below 4 if statements are just for testing, this gives higher movement speed in angles
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-			//auto ship->getX();
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-
-		}
+	ioMovement();
+	if (developerMode) {		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 			//for now will be the first ship of the game
 			auto actorPtr = nonPlayerActors[0];
@@ -104,5 +94,21 @@ void ee::Game::draw(sf::RenderWindow & window)
 	//draw players until heap is used
 	for (auto playerPtr : players) {
 		playerPtr->draw(window);
+	}
+}
+
+void ee::Game::ioMovement()
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		controlTarget->moveUp();
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		controlTarget->moveDown();
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		controlTarget->moveLeft();
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		controlTarget->moveRight();
 	}
 }

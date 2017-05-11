@@ -11,9 +11,11 @@ using std::vector;
 namespace ee {
 	class Player : public Actor
 	{
+	private:
 		//transformations to player sprite must be applied to every sprite in the container
 		vector<shared_ptr<sf::Sprite>> playerSpriteSheet;
 		shared_ptr<sf::Sprite> currentSprite;
+		int spriteIndex;
 
 		//construtor helper functions
 		void initSpriteSheet(const sf::Texture& texture, int widthPixels, int heightPixels);
@@ -26,6 +28,25 @@ namespace ee {
 		// Inherited via Actor
 		virtual void setScale(float scaleFactor) override;
 		virtual float getScale() override;
+		virtual void moveUp() override;
+		virtual void moveDown() override;
+		virtual void moveLeft() override;
+		virtual void moveRight() override;
+		virtual void moveUpLeft() override;
+		virtual void moveUpRight() override;
+		virtual void moveDownLeft() override;
+		virtual void moveDownRight() override;
+
+	private:
+		//helper functions
+		/** the distance walked before an image swap is warrented*/
+		float swapDistance; //TODO set these in constructor and update function "updateSpriteImage"
+		/** the distance walked horrizontally*/
+		float horrizontalWalkDistance;
+		/** the distance walked vertically */
+		float verticalWalkDistance;
+		void updateSpriteImage(int correctColumn);
+		void swapImagesToNewIndex();
 	};
 };
 
