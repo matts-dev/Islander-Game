@@ -11,9 +11,12 @@ using std::vector;
 namespace ee {
 	class Player : public Actor
 	{
-		vector<sf::Sprite> playerSpriteSheet;
-		void initSpriteSheet();
-		shared_ptr<sf::Sprite> sprite;
+		//transformations to player sprite must be applied to every sprite in the container
+		vector<shared_ptr<sf::Sprite>> playerSpriteSheet;
+		shared_ptr<sf::Sprite> currentSprite;
+
+		//construtor helper functions
+		void initSpriteSheet(const sf::Texture& texture, int widthPixels, int heightPixels);
 	public:
 		Player(const sf::Texture& texture, int widthPixels, int heightPixels);
 		virtual ~Player();
