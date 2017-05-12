@@ -1,5 +1,6 @@
 #include "Player.h"
 #include<SFML/Graphics.hpp>
+#include<cmath>
 
 using std::shared_ptr;
 using std::make_shared;
@@ -31,6 +32,11 @@ ee::Player::Player(const sf::Texture& texture, int widthPixels, int heightPixels
 	initSpriteSheet(texture, widthPixels, heightPixels);
 	spriteIndex = 0;
 	currentSprite = playerSpriteSheet[spriteIndex];
+
+	//movement related fields
+	swapDistance = widthPixels < heightPixels ? widthPixels : heightPixels;
+	verticalWalkDistance = 0;
+	horrizontalWalkDistance = 0;
 }
 
 
@@ -62,25 +68,31 @@ float ee::Player::getScale()
 void ee::Player::moveUp()
 {
 	currentSprite->move(0, -moveSpeed);
+	verticalWalkDistance += -moveSpeed;
 	updateSpriteImage(2);
 }
 
 void ee::Player::moveDown()
 {
 	currentSprite->move(0, moveSpeed);
+	verticalWalkDistance += moveSpeed;
 	updateSpriteImage(0);
 }
 
 void ee::Player::moveLeft()
 {
 	currentSprite->move(-moveSpeed, 0);
+	horrizontalWalkDistance += -moveSpeed;
 	updateSpriteImage(1);
+	updateHorrizontalImage(1);
 }
 
 void ee::Player::moveRight()
 {
 	currentSprite->move(moveSpeed, 0);
+	horrizontalWalkDistance += moveSpeed;
 	updateSpriteImage(3);
+	updateHorrizontalImage(3);
 
 }
 
@@ -110,6 +122,21 @@ void ee::Player::updateSpriteImage(int correctColumn)
 		//since there are two images per column, you can determine if the first image or second image is loaded by modding by 
 		spriteIndex = correctColumn * 2 + spriteIndex % 2;
 
+		swapImagesToNewIndex();
+	}
+
+}
+
+void ee::Player::updateHorrizontalImage(int correctColumn)
+{
+	//round float towards zero
+	int dist = static_cast<int>(abs(horrizontalWalkDistance));
+	int walkOffset = (dist / swapDistance) % 2;
+
+	//TODO start here, didn't have time to test
+	int newIndex = 2 * correctColumn + walkOffset;
+	if (playerSpriteSheet[newIndex] != currentSprite) {
+		spriteIndex = newIndex;
 		swapImagesToNewIndex();
 	}
 

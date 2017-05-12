@@ -40,12 +40,13 @@ namespace ee {
 	private:
 		//helper functions
 		/** the distance walked before an image swap is warrented*/
-		float swapDistance; //TODO set these in constructor and update function "updateSpriteImage"
+		int swapDistance; 
 		/** the distance walked horrizontally*/
 		float horrizontalWalkDistance;
 		/** the distance walked vertically */
 		float verticalWalkDistance;
 		void updateSpriteImage(int correctColumn);
+		void updateHorrizontalImage(int correctColumn);
 		void swapImagesToNewIndex();
 	};
 };
