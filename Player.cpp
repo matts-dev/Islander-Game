@@ -156,7 +156,7 @@ void ee::Player::updateSpriteImage(int correctColumn)
 void ee::Player::updateImageBasedOnWalkDistance(int correctColumn, float walkDistance)
 {
 	//round float towards zero
-	int dist = static_cast<int>(abs(walkDistance));
+    int dist = static_cast<int>(std::abs(walkDistance));
 	int walkOffset = (dist / swapDistance) % 2;
 
 	//2 * column since each column contains two images (and sheet has been linearized
