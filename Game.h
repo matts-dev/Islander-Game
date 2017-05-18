@@ -5,6 +5,7 @@
 //non ee forward declarations
 namespace sf {
 	class RenderWindow;
+	class View;
 }
 
 using std::vector;
@@ -24,6 +25,8 @@ namespace ee {
 		shared_ptr<Actor> player;
 		shared_ptr<Actor> controlTarget;
 		shared_ptr<Textures const> textures;
+		shared_ptr<sf::View> camera;
+		bool moveCamera;
 
 		bool developerMode;
 
@@ -37,6 +40,7 @@ namespace ee {
 		//helper functions
 	private:
 		void ioMovement();
+		void updateViewToControlled(sf::RenderWindow& window);
 	};
 };
 

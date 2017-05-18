@@ -31,6 +31,10 @@ namespace ee {
 		virtual void moveUpRight() = 0;
 		virtual void moveDownLeft() = 0;
 		virtual void moveDownRight() = 0;
+
+		//Getters
+		virtual float getX() = 0;
+		virtual float getY() = 0;
 	};
 };
 

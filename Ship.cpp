@@ -107,6 +107,20 @@ void ee::Ship::moveDownRight()
 {
 }
 
+float ee::Ship::getX()
+{
+	auto iter = components.begin();
+	//from the iter, get the second(sprite pointer), get the position, and get desired value!
+	return iter->second->getPosition().x;
+}
+
+float ee::Ship::getY()
+{
+	auto iter = components.begin();
+	//from the iter, get the second(sprite pointer), get the position, and get desired value!
+	return iter->second->getPosition().y;
+}
+
 /** puts two characters into a short via bit shifting */
 short ee::Ship::getPosKey(char x, char y) {
 	short key = x;

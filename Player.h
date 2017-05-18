@@ -36,7 +36,10 @@ namespace ee {
 		virtual void moveUpRight() override;
 		virtual void moveDownLeft() override;
 		virtual void moveDownRight() override;
-		void genericMove(int correctColumn, float deltaX, float deltaY, float primaryWalkDirectionDistance);
+		virtual float getX() override;
+		virtual float getY() override;
+
+		void genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance);
 
 	private:
 		//helper functions

@@ -1,4 +1,5 @@
 #include "Game.h"
+#include<iostream>
 #include<SFML/Graphics.hpp>
 #include<SFML/Window.hpp>
 #include<SFML/Network.hpp>
@@ -14,19 +15,27 @@ using std::make_shared;
 using std::shared_ptr;
 using std::weak_ptr;
 
-ee::Game::Game()
+ee::Game::Game() : moveCamera(true)
 {
+	//initialize all textures
 	textures = Textures::getInstance();
 	shared_ptr<sf::Texture const> actorTexture = textures->getActorSheet();
+
+	//Create a camera (ie a view)
+	camera = make_shared<sf::View>();
+
+	//Create a player to control
 	auto player1 = make_shared<Player>(*actorTexture, 16, 16);
 	controlTarget = player1;
 	player1->setScale(2.0f);
 	players.emplace_back(player1);
 
+	//Createa ship to pilot
 	auto ship = make_shared<Ship>();
 	nonPlayerActors.emplace_back(ship);
 	ship->setPosition(500.f, 500.f);
 
+	//Enable developer mode features
 	developerMode = true;
 }
 
@@ -58,8 +67,13 @@ void ee::Game::io()
 			}
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-			auto newShip = make_shared<Ship>();
-			nonPlayerActors.emplace_back(newShip);
+			//auto newShip = make_shared<Ship>();
+			//nonPlayerActors.emplace_back(newShip);
+			std::cout << "ship X and Y:" << nonPlayerActors[0]->getX() << " " << nonPlayerActors[0]->getY() << std::endl;
+			std::cout << "control X and Y:" << controlTarget->getX() << " " << controlTarget->getY() << std::endl;
+			
+			//enable/disable camera 
+			moveCamera = !moveCamera;
 		}
 		//change scale to smaller
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
@@ -84,6 +98,7 @@ void ee::Game::logic()
 
 void ee::Game::draw(sf::RenderWindow & window)
 {
+	updateViewToControlled(window);
 	//THIS METHOD SHOULD BE CHANGED TO HEAP STRUCTURE USING ACTORS PRIORTY FOR DRAW ORDER
 
 	//draw ship before player
@@ -131,5 +146,16 @@ void ee::Game::ioMovement()
 	//Handle only D pressed
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		controlTarget->moveRight();
+	}
+}
+
+void ee::Game::updateViewToControlled(sf::RenderWindow & window)
+{
+	// if control target isn't null
+	if (controlTarget && moveCamera) {
+		sf::Vector2u oldSize = window.getSize();
+		camera->setSize(static_cast<float>(oldSize.x), static_cast<float>(oldSize.y));
+		camera->setCenter(controlTarget->getX(), controlTarget->getY());
+		window.setView(*camera);
 	}
 }

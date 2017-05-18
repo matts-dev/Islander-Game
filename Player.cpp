@@ -83,7 +83,6 @@ void ee::Player::moveDown()
 void ee::Player::moveLeft()
 {
 	genericMove(1, -moveSpeed, 0, horrizontalWalkDistance);
-
 }
 
 void ee::Player::moveRight()
@@ -124,7 +123,7 @@ void ee::Player::moveDownRight()
 	@param primaryWalkDirectionDistance - the distance walked to determine if image should be swapped.
 		this will either be verticalDistanceWalked or horrizontalDistanceWalked.
 */
-void ee::Player::genericMove(int correctColumn, float deltaX, float deltaY, float primaryWalkDirectionDistance)
+void ee::Player::genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance)
 {
 	currentSprite->move(deltaX, deltaY);
 	horrizontalWalkDistance += deltaX;
@@ -207,4 +206,20 @@ float ee::Player::getAngularSpeed()
 	float result = std::powf(moveSpeed, 2);
 	result /= 2;
 	return std::powf(result, 0.5000f);
+}
+
+float ee::Player::getX()
+{
+	if (currentSprite) {
+		return currentSprite->getPosition().x;
+	}
+	return 0.f;
+}
+
+float ee::Player::getY()
+{
+	if (currentSprite) {
+		return currentSprite->getPosition().y;
+	}
+	return 0.0f;
 }

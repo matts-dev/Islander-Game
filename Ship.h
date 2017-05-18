@@ -60,6 +60,8 @@ namespace ee {
 		virtual void moveUpRight() override;
 		virtual void moveDownLeft() override;
 		virtual void moveDownRight() override;
+		virtual float getX() override;
+		virtual float getY() override;
 	};
 };
 
