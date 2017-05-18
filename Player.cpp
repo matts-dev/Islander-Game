@@ -33,8 +33,11 @@ ee::Player::Player(const sf::Texture& texture, int widthPixels, int heightPixels
 	spriteIndex = 0;
 	currentSprite = playerSpriteSheet[spriteIndex];
 
+	//set move speed based on size of sprite image
+	updateMoveSpeedBasedOnSize();
+
 	//movement related fields
-	swapDistance = widthPixels < heightPixels ? widthPixels : heightPixels;
+	updateSwapDistance();
 	verticalWalkDistance = 0;
 	horrizontalWalkDistance = 0;
 }
@@ -57,6 +60,8 @@ void ee::Player::setScale(float scaleFactor)
 		//do not differentiate between x and y
 		currentSprite->setScale(scaleFactor, scaleFactor);
 	}
+	updateMoveSpeedBasedOnSize();
+	updateSwapDistance();
 }
 
 float ee::Player::getScale()
@@ -70,6 +75,8 @@ void ee::Player::moveUp()
 	currentSprite->move(0, -moveSpeed);
 	verticalWalkDistance += -moveSpeed;
 	updateSpriteImage(2);
+	updateImageBasedOnWalkDistance(2, verticalWalkDistance);
+
 }
 
 void ee::Player::moveDown()
@@ -77,6 +84,7 @@ void ee::Player::moveDown()
 	currentSprite->move(0, moveSpeed);
 	verticalWalkDistance += moveSpeed;
 	updateSpriteImage(0);
+	updateImageBasedOnWalkDistance(0, verticalWalkDistance);
 }
 
 void ee::Player::moveLeft()
@@ -84,7 +92,9 @@ void ee::Player::moveLeft()
 	currentSprite->move(-moveSpeed, 0);
 	horrizontalWalkDistance += -moveSpeed;
 	updateSpriteImage(1);
-	updateHorrizontalImage(1);
+	//updateHorrizontalImage(1);
+	updateImageBasedOnWalkDistance(1, horrizontalWalkDistance);
+
 }
 
 void ee::Player::moveRight()
@@ -92,7 +102,9 @@ void ee::Player::moveRight()
 	currentSprite->move(moveSpeed, 0);
 	horrizontalWalkDistance += moveSpeed;
 	updateSpriteImage(3);
-	updateHorrizontalImage(3);
+	//updateHorrizontalImage(3);
+	updateImageBasedOnWalkDistance(3, horrizontalWalkDistance);
+
 
 }
 
@@ -127,23 +139,51 @@ void ee::Player::updateSpriteImage(int correctColumn)
 
 }
 
-void ee::Player::updateHorrizontalImage(int correctColumn)
+
+/**
+	Updates the image based on a distance walked. correctColumn determines the direction
+	the sprite is currently facing. The current image of the direction is determined using
+	modulus and the distance the sprite has walked in the direction. 
+
+	@usage: Simply provide the correct column number (this determines direction) and
+	provide a value that represent the distance walked in the direction.
+
+	@param correctColumn - the column representing the sprites direction (look at spritesheet file)
+	@param walkDistance - the distance walked in the direction (either horrizontal or vertical); for 
+		upward and downward movements, provide vertical distance walked; for left or right movements,
+		provide horrizontal distance walked.
+*/
+void ee::Player::updateImageBasedOnWalkDistance(int correctColumn, float walkDistance)
 {
 	//round float towards zero
-	int dist = static_cast<int>(abs(horrizontalWalkDistance));
+	int dist = static_cast<int>(abs(walkDistance));
 	int walkOffset = (dist / swapDistance) % 2;
 
-	//TODO start here, didn't have time to test
+	//2 * column since each column contains two images (and sheet has been linearized
 	int newIndex = 2 * correctColumn + walkOffset;
 	if (playerSpriteSheet[newIndex] != currentSprite) {
 		spriteIndex = newIndex;
 		swapImagesToNewIndex();
 	}
-
 }
 
 void ee::Player::swapImagesToNewIndex()
 {
 	playerSpriteSheet[spriteIndex]->setPosition(currentSprite->getPosition());
 	currentSprite = playerSpriteSheet[spriteIndex];
+}
+
+void ee::Player::updateMoveSpeedBasedOnSize()
+{
+	float scale = getScale();
+	moveSpeed = currentSprite->getTextureRect().width / 5.f;
+	moveSpeed *= scale;
+}
+
+void ee::Player::updateSwapDistance()
+{
+	int widthPixels = currentSprite->getTextureRect().width;
+	int heightPixels = currentSprite->getTextureRect().height;
+	swapDistance = widthPixels < heightPixels ? widthPixels : heightPixels;
+	swapDistance = static_cast<int>(swapDistance * getScale());
 }

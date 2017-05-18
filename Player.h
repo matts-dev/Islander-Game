@@ -46,8 +46,10 @@ namespace ee {
 		/** the distance walked vertically */
 		float verticalWalkDistance;
 		void updateSpriteImage(int correctColumn);
-		void updateHorrizontalImage(int correctColumn);
+		void updateImageBasedOnWalkDistance(int correctColumn, float walkDistance);
 		void swapImagesToNewIndex();
+		void updateMoveSpeedBasedOnSize();
+		void updateSwapDistance();
 	};
 };
 
