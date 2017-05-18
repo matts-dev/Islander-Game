@@ -72,40 +72,23 @@ float ee::Player::getScale()
 
 void ee::Player::moveUp()
 {
-	currentSprite->move(0, -moveSpeed);
-	verticalWalkDistance += -moveSpeed;
-	updateSpriteImage(2);
-	updateImageBasedOnWalkDistance(2, verticalWalkDistance);
-
+	genericMove(2, 0, -moveSpeed, verticalWalkDistance);
 }
 
 void ee::Player::moveDown()
 {
-	currentSprite->move(0, moveSpeed);
-	verticalWalkDistance += moveSpeed;
-	updateSpriteImage(0);
-	updateImageBasedOnWalkDistance(0, verticalWalkDistance);
+	genericMove(0, 0, moveSpeed, verticalWalkDistance);
 }
 
 void ee::Player::moveLeft()
 {
-	currentSprite->move(-moveSpeed, 0);
-	horrizontalWalkDistance += -moveSpeed;
-	updateSpriteImage(1);
-	//updateHorrizontalImage(1);
-	updateImageBasedOnWalkDistance(1, horrizontalWalkDistance);
+	genericMove(1, -moveSpeed, 0, horrizontalWalkDistance);
 
 }
 
 void ee::Player::moveRight()
 {
-	currentSprite->move(moveSpeed, 0);
-	horrizontalWalkDistance += moveSpeed;
-	updateSpriteImage(3);
-	//updateHorrizontalImage(3);
-	updateImageBasedOnWalkDistance(3, horrizontalWalkDistance);
-
-
+	genericMove(3, moveSpeed, 0, horrizontalWalkDistance);
 }
 
 void ee::Player::moveUpLeft()
@@ -134,7 +117,7 @@ void ee::Player::moveDownRight()
 
 /**
 	Moves current sprite by deltaX and deltaY.
-	
+
 	@param correctColumn - the column in sprite sheet for current direction
 	@param deltaX - the change in horrizontal distance to apply to sprite.
 	@param deltaY - the change in vertical distance to apply to sprite.
@@ -170,20 +153,20 @@ void ee::Player::updateSpriteImage(int correctColumn)
 /**
 	Updates the image based on a distance walked. correctColumn determines the direction
 	the sprite is currently facing. The current image of the direction is determined using
-	modulus and the distance the sprite has walked in the direction. 
+	modulus and the distance the sprite has walked in the direction.
 
 	@usage: Simply provide the correct column number (this determines direction) and
 	provide a value that represent the distance walked in the direction.
 
 	@param correctColumn - the column representing the sprites direction (look at spritesheet file)
-	@param walkDistance - the distance walked in the direction (either horrizontal or vertical); for 
+	@param walkDistance - the distance walked in the direction (either horrizontal or vertical); for
 		upward and downward movements, provide vertical distance walked; for left or right movements,
 		provide horrizontal distance walked.
 */
 void ee::Player::updateImageBasedOnWalkDistance(int correctColumn, float walkDistance)
 {
 	//round float towards zero
-    int dist = static_cast<int>(std::abs(walkDistance));
+	int dist = static_cast<int>(std::abs(walkDistance));
 	int walkOffset = (dist / swapDistance) % 2;
 
 	//2 * column since each column contains two images (and sheet has been linearized

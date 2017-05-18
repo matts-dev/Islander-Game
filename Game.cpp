@@ -99,26 +99,37 @@ void ee::Game::draw(sf::RenderWindow & window)
 
 void ee::Game::ioMovement()
 {
+	//Handle W pressed (and potentially W+A and W+D)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 			controlTarget->moveUpLeft();
-		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			controlTarget->moveUpRight();
-		} else {
+		}
+		else {
 			controlTarget->moveUp();
 		}
 
-	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+	}
+	//Handle S pressed (and potentially S+A and S+D
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 			controlTarget->moveDownLeft();
-		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			controlTarget->moveDownRight();
-		} else {
+		}
+		else {
 			controlTarget->moveDown();
 		}
-	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+	}
+	//Handle only A pressed
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		controlTarget->moveLeft();
-	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+	}
+	//Handle only D pressed
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		controlTarget->moveRight();
 	}
 }
