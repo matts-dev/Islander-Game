@@ -36,6 +36,7 @@ namespace ee {
 		virtual void moveUpRight() override;
 		virtual void moveDownLeft() override;
 		virtual void moveDownRight() override;
+		void genericMove(int correctColumn, float deltaX, float deltaY, float primaryWalkDirectionDistance);
 
 	private:
 		//helper functions
@@ -50,6 +51,7 @@ namespace ee {
 		void swapImagesToNewIndex();
 		void updateMoveSpeedBasedOnSize();
 		void updateSwapDistance();
+		float getAngularSpeed();
 	};
 };
 

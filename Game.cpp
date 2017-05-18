@@ -38,7 +38,7 @@ ee::Game::~Game()
 void ee::Game::io()
 {
 	ioMovement();
-	if (developerMode) {		
+	if (developerMode) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 			//for now will be the first ship of the game
 			auto actorPtr = nonPlayerActors[0];
@@ -100,15 +100,25 @@ void ee::Game::draw(sf::RenderWindow & window)
 void ee::Game::ioMovement()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		controlTarget->moveUp();
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		controlTarget->moveDown();
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			controlTarget->moveUpLeft();
+		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			controlTarget->moveUpRight();
+		} else {
+			controlTarget->moveUp();
+		}
+
+	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			controlTarget->moveDownLeft();
+		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			controlTarget->moveDownRight();
+		} else {
+			controlTarget->moveDown();
+		}
+	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		controlTarget->moveLeft();
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		controlTarget->moveRight();
 	}
 }

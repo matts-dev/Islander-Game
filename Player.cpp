@@ -110,19 +110,46 @@ void ee::Player::moveRight()
 
 void ee::Player::moveUpLeft()
 {
+	float angularSpeed = getAngularSpeed();
+	genericMove(2, -angularSpeed, -angularSpeed, verticalWalkDistance);
 }
 
 void ee::Player::moveUpRight()
 {
+	float angularSpeed = getAngularSpeed();
+	genericMove(2, angularSpeed, -angularSpeed, verticalWalkDistance);
 }
 
 void ee::Player::moveDownLeft()
 {
+	float angularSpeed = getAngularSpeed();
+	genericMove(0, -angularSpeed, angularSpeed, horrizontalWalkDistance);
 }
 
 void ee::Player::moveDownRight()
 {
+	float angularSpeed = getAngularSpeed();
+	genericMove(0, angularSpeed, angularSpeed, horrizontalWalkDistance);
 }
+
+/**
+	Moves current sprite by deltaX and deltaY.
+	
+	@param correctColumn - the column in sprite sheet for current direction
+	@param deltaX - the change in horrizontal distance to apply to sprite.
+	@param deltaY - the change in vertical distance to apply to sprite.
+	@param primaryWalkDirectionDistance - the distance walked to determine if image should be swapped.
+		this will either be verticalDistanceWalked or horrizontalDistanceWalked.
+*/
+void ee::Player::genericMove(int correctColumn, float deltaX, float deltaY, float primaryWalkDirectionDistance)
+{
+	currentSprite->move(deltaX, deltaY);
+	horrizontalWalkDistance += deltaX;
+	verticalWalkDistance += deltaY;
+	updateSpriteImage(correctColumn);
+	updateImageBasedOnWalkDistance(correctColumn, primaryWalkDirectionDistance);
+}
+
 
 void ee::Player::updateSpriteImage(int correctColumn)
 {
@@ -186,4 +213,15 @@ void ee::Player::updateSwapDistance()
 	int heightPixels = currentSprite->getTextureRect().height;
 	swapDistance = widthPixels < heightPixels ? widthPixels : heightPixels;
 	swapDistance = static_cast<int>(swapDistance * getScale());
+}
+
+float ee::Player::getAngularSpeed()
+{
+	//calculate movement speed using pythagorean's theorm and the fact
+	//that angular speed is a 45 degree triangle (thus a & b are same magnitude)
+	//thus: c^2 = a^2 + b^2; which is: c^2 = 2a^2
+	//by algrebraic manipulation: ((c^2)/2)^(1/2) = a
+	float result = std::powf(moveSpeed, 2);
+	result /= 2;
+	return std::powf(result, 0.5000f);
 }
