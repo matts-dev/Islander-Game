@@ -8,6 +8,7 @@
 using std::make_shared;
 using std::weak_ptr;
 using std::string;
+using std::shared_ptr;
 ee::Textures::Textures()
 {
 

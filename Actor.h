@@ -1,9 +1,5 @@
 #pragma once
-
 #include<SFML/Graphics.hpp>
-#include<memory>
-
-using std::shared_ptr;
 
 namespace ee {
 	/*

@@ -5,27 +5,25 @@
 #include<unordered_map>
 #include<SFML/Graphics.hpp>
 
-using std::shared_ptr;
-using std::unordered_map;
-using std::vector;
+
 
 namespace ee {
 	class Ship : public Actor
 	{
 		//Texture blocks to use for copying
-		static vector<sf::Sprite> plankBlocks;
+		static std::vector<sf::Sprite> plankBlocks;
 		static void initPlankBlocks();
 
 		//Actual components that make up the ship (blocks you see)
-		unordered_map<short, shared_ptr<sf::Sprite>> components;
+		std::unordered_map<short, std::shared_ptr<sf::Sprite>> components;
 
 		//width should be event
 		char const widthBlocks = 7;
 		char const heightBlocks = 15;
 
 		//index = row, value = col; ie vector[row] returns col, 
-		vector<int> topLeftCorners;
-		vector<int> topRightCorners;
+		std::vector<int> topLeftCorners;
+		std::vector<int> topRightCorners;
 
 		//constructor helper functions
 		void createRectangleOfPlankSprites();

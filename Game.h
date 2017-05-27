@@ -8,9 +8,6 @@ namespace sf {
 	class View;
 }
 
-using std::vector;
-using std::shared_ptr;
-
 
 namespace ee {
 
@@ -20,12 +17,12 @@ namespace ee {
 	class Game
 	{
 	private:
-		vector<shared_ptr<Actor>> players;
-		vector<shared_ptr<Actor>> nonPlayerActors;
-		shared_ptr<Actor> player;
-		shared_ptr<Actor> controlTarget;
-		shared_ptr<Textures const> textures;
-		shared_ptr<sf::View> camera;
+		std::vector<std::shared_ptr<Actor>> players;
+		std::vector<std::shared_ptr<Actor>> nonPlayerActors;
+		std::shared_ptr<Actor> player;
+		std::shared_ptr<Actor> controlTarget;
+		std::shared_ptr<Textures const> textures;
+		std::shared_ptr<sf::View> camera;
 		bool moveCamera;
 
 		bool developerMode;

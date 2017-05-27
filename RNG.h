@@ -4,9 +4,6 @@
 #include<thread>
 #include<mutex>
 
-
-
-using std::shared_ptr;
 namespace ee {
 	class RNG final
 	{
@@ -16,8 +13,8 @@ namespace ee {
 	public:
 		~RNG();
 		int nextRandomInt();
-		static shared_ptr<RNG> singleton;
-		static shared_ptr<RNG> getInstance();
+		static std::shared_ptr<RNG> singleton;
+		static std::shared_ptr<RNG> getInstance();
 	};
 }
 

@@ -5,16 +5,13 @@
 #include<vector>
 #include"Actor.h"
 
-using std::shared_ptr;
-using std::vector;
-
 namespace ee {
 	class Player : public Actor
 	{
 	private:
 		//transformations to player sprite must be applied to every sprite in the container
-		vector<shared_ptr<sf::Sprite>> playerSpriteSheet;
-		shared_ptr<sf::Sprite> currentSprite;
+		std::vector<std::shared_ptr<sf::Sprite>> playerSpriteSheet;
+		std::shared_ptr<sf::Sprite> currentSprite;
 		int spriteIndex;
 
 		//construtor helper functions
