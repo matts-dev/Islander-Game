@@ -9,7 +9,7 @@ using std::make_shared;
 ee::SpatialHash::SpatialHash(int gridSize, int tableSize)
 	: gridSize(gridSize),
 	tableSize(tableSize),
-	hashMap(std::make_unique<shared_ptr<HashNode<sf::Vector2i, weak_ptr<Actor>>>[]>(tableSize)),
+	hashMap(std::unique_ptr<shared_ptr<HashNode<sf::Vector2i, weak_ptr<Actor>>>[]>(new shared_ptr<HashNode<sf::Vector2i, weak_ptr<Actor>>>[tableSize])),
 	hornerNumber(17)
 {
 	//initial table to nullptr
