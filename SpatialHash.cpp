@@ -3,11 +3,13 @@
 #include "SpatialHash.h"
 
 using std::weak_ptr;
+using std::shared_ptr;
+using std::make_shared;
 
 ee::SpatialHash::SpatialHash(int gridSize, int tableSize)
 	: gridSize(gridSize),
 	tableSize(tableSize),
-	hashMap(std::make_unique<HashNode<sf::Vector2i, weak_ptr<Actor>>*[]>(tableSize)),
+	hashMap(std::make_unique<shared_ptr<HashNode<sf::Vector2i, weak_ptr<Actor>>>[]>(tableSize)),
 	hornerNumber(17)
 {
 	//initial table to nullptr
@@ -20,12 +22,29 @@ ee::SpatialHash::~SpatialHash()
 {
 }
 
-/**
-Simply loads bit patterns of float into a 64 bit carrier that is gauranteed to be unique.
-The output is intended to be used in a balanced binary tree rather than a hashmap.
+void ee::SpatialHash::add(const float & x, const float & y, std::weak_ptr<Actor> actor)
+{
+	int index = hash(x, y);
+	auto chain = hashMap[index];
 
-Hash is special in that it can be reversed to determine the origonal x and y of the coordinate. 
-*/
+	//calculate grids (will be part of key)
+	int horrizontalGrid = static_cast<int>(x / gridSize);
+	int verticalGrid = static_cast<int>(y / gridSize);
+	sf::Vector2i gridXY(horrizontalGrid, verticalGrid);
+
+
+	//chain of nodes already exists
+	if (chain) {
+		auto newNode = std::make_shared<HashNode<sf::Vector2i, weak_ptr<Actor>>>(gridXY, actor, nullptr);
+		chain->addNode(newNode);
+	}
+	//no chain exists
+	else {
+		hashMap[index] = std::make_shared<HashNode<sf::Vector2i, weak_ptr<Actor>>>(gridXY, actor, nullptr);
+	}
+}
+
+
 int ee::SpatialHash::hash(const float & x, const float & y)
 {
 	//first subdivide into grids, then use horner's version of universal hash function on components

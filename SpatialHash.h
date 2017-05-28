@@ -9,7 +9,7 @@ namespace ee {
 	class SpatialHash final
 	{
 		//table (array) of pointers to chains: nodes<(x,y), actor>
-		std::unique_ptr<HashNode<sf::Vector2i, std::weak_ptr<Actor>>*[]> hashMap;
+		std::unique_ptr<std::shared_ptr<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>[]> hashMap;
 		int gridSize;
 		int tableSize;
 		int hornerNumber;

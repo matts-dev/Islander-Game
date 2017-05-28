@@ -1,13 +1,5 @@
 #include "HashNode.h"
 
-template<typename K, typename V>
-ee::HashNode<K, V>::HashNode(const K& key, const V& value, HashNode* nextNode) :
-	key(key), value(value), nextNode(nextNode)
-{
-}
+//templates must have definitions requiring template in header 
+//(https://stackoverflow.com/questions/495021/why-can-templates-only-be-implemented-in-the-header-file)
 
-
-template<typename K, typename V>
-ee::HashNode<K, V>::~HashNode()
-{
-}
