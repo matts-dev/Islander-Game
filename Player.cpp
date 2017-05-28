@@ -223,3 +223,10 @@ float ee::Player::getY()
 	}
 	return 0.0f;
 }
+
+void ee::Player::getInNearbyVehicle()
+{
+	//TODO start here.
+	//Use spatial hashing or spatial mapping to determine nearby cells with vehicles?
+	
+}

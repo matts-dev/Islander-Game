@@ -37,6 +37,7 @@ namespace ee {
 		//helper functions
 	private:
 		void ioMovement();
+		void ioInteraction();
 		void updateViewToControlled(sf::RenderWindow& window);
 	};
 };

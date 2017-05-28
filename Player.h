@@ -36,9 +36,10 @@ namespace ee {
 		virtual float getX() override;
 		virtual float getY() override;
 
-		void genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance);
+		virtual void getInNearbyVehicle();
 
 	private:
+		void genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance);
 		//helper functions
 		/** the distance walked before an image swap is warrented*/
 		int swapDistance; 

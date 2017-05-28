@@ -149,6 +149,17 @@ void ee::Game::ioMovement()
 	}
 }
 
+void ee::Game::ioInteraction()
+{
+	auto player = std::dynamic_pointer_cast<Player>(controlTarget);
+	if (player) {
+		//attempt boarding closest vehicle
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+			player->getInNearbyVehicle();
+		}
+	}
+}
+
 void ee::Game::updateViewToControlled(sf::RenderWindow & window)
 {
 	// if control target isn't null
