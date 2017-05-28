@@ -1,18 +1,22 @@
 #include <cmath>
 #include "Actor.h"
-#include "SpatialMapper.h"
+#include "SpatialHash.h"
 
 using std::weak_ptr;
 
-ee::SpatialMapper::SpatialMapper(int gridSize, int tableSize)
+ee::SpatialHash::SpatialHash(int gridSize, int tableSize)
 	: gridSize(gridSize),
 	tableSize(tableSize),
-	hashMap(std::make_unique<Actor*[]>(tableSize)),
+	hashMap(std::make_unique<HashNode<sf::Vector2i, weak_ptr<Actor>>*[]>(tableSize)),
 	hornerNumber(17)
 {
+	//initial table to nullptr
+	for (int i = 0; i < tableSize; ++i) {
+		hashMap[i] = nullptr;
+	}
 }
 
-ee::SpatialMapper::~SpatialMapper()
+ee::SpatialHash::~SpatialHash()
 {
 }
 
@@ -22,7 +26,7 @@ The output is intended to be used in a balanced binary tree rather than a hashma
 
 Hash is special in that it can be reversed to determine the origonal x and y of the coordinate. 
 */
-int ee::SpatialMapper::hash(const float & x, const float & y)
+int ee::SpatialHash::hash(const float & x, const float & y)
 {
 	//first subdivide into grids, then use horner's version of universal hash function on components
 	int horrizontalGrid = static_cast<int>(x / gridSize);
