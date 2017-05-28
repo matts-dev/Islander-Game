@@ -22,7 +22,8 @@ namespace ee {
 		void setNextNode(std::shared_ptr<HashNode> nextNode) { this->nextNode = nextNode; };
 		std::shared_ptr<HashNode> getNextNode() { return nextNode; };
 		void addNode(std::shared_ptr<HashNode<K, V>> newNode);
-		void removeChild(std::shared_ptr < HashNode<K, V> > nodeToRemove);
+		bool removeChild(std::shared_ptr < HashNode<K, V> > nodeToRemove);
+		bool operator==(HashNode<K, V> rhs);
 	};
 
 	//-------------------------------------------DEFINITIONS-----------------------------------------------
@@ -55,16 +56,26 @@ namespace ee {
 		}
 	}
 
-	//Remove a child node if it exists
+	//Remove a child node if it exists @return true if removed, false if nothing removed
 	template<typename K, typename V>
-	inline void HashNode<K, V>::removeChild(std::shared_ptr<HashNode<K, V>> nodeToRemove)
+	inline bool HashNode<K, V>::removeChild(std::shared_ptr<HashNode<K, V>> nodeToRemove)
 	{
 		if (nextNode == nodeToRemove) {
-			nextNode = nodeToRemove->nextNode;
+			auto nodeToSkipTo = nodeToRemove->nextNode;
+			nextNode->setNextNode(nullptr);
+			nextNode = nodeToSkipTo;
+			return true;
 		}
 		else if (nextNode != nullptr) {
-			nextNode->removeChild(nodeToRemove);
+			return nextNode->removeChild(nodeToRemove);
 		}
+		return false;
+	}
+
+	template<typename K, typename V>
+	inline bool HashNode<K, V>::operator==(HashNode<K, V> rhs)
+	{
+		return (this->key == rhs.key) && (this->value == rhs.value);
 	}
 
 }
