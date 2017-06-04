@@ -39,6 +39,12 @@ namespace ee {
 		virtual void getInNearbyVehicle();
 
 	private:
+		// Spatial Hashing Functions
+		virtual void spatialHash_insertSelf() override;
+		virtual void spatialhash_removeSelf() override;
+		virtual void updateHashFromTo(const float & deltaX, const float & deltaY) override;
+
+	private:
 		void genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance);
 		//helper functions
 		/** the distance walked before an image swap is warrented*/
@@ -53,6 +59,16 @@ namespace ee {
 		void updateMoveSpeedBasedOnSize();
 		void updateSwapDistance();
 		float getAngularSpeed();
+
+		/** Helper function that returns true if the player can be moved by the parameter delta values */
+		bool validMoveDelta(const float& deltaX, const float& deltaY);
+
+		virtual bool collides(const sf::IntRect & rectToTest) const override;
+
+
+
+
+
 	};
 };
 

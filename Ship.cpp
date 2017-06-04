@@ -121,6 +121,29 @@ float ee::Ship::getY()
 	return iter->second->getPosition().y;
 }
 
+void ee::Ship::spatialHash_insertSelf()
+{
+	//TODO not implemented
+}
+
+void ee::Ship::spatialhash_removeSelf()
+{
+	//TODO not implemented
+}
+
+void ee::Ship::updateHashFromTo(const float & deltaX, const float & deltaY)
+{
+}
+
+
+
+bool ee::Ship::collides(const sf::IntRect & rectToTest) const
+{
+
+	return false;
+}
+
+
 /** puts two characters into a short via bit shifting */
 short ee::Ship::getPosKey(char x, char y) {
 	short key = x;

@@ -9,13 +9,13 @@ namespace ee {
 	class HashNode final
 	{
 	public:
-		const K& key;
-		const V& value;
+		K key;
+		V value;
 	private:
 		std::shared_ptr<HashNode> nextNode;
 
 	public:
-		HashNode(const K& key, const V& value, HashNode* nextNode);
+		HashNode(K key, V value, HashNode* nextNode);
 		~HashNode();
 
 	public:
@@ -31,9 +31,12 @@ namespace ee {
 
 		//ctor
 	template<typename K, typename V>
-	inline ee::HashNode<K, V>::HashNode(const K& key, const V& value, HashNode* nextNode) :
-		key(key), value(value), nextNode(nextNode)
+	inline ee::HashNode<K, V>::HashNode(K key, V value, HashNode* nextNode) :
+		nextNode(nextNode)
 	{
+		this->key = K(key);
+		//this->key = key; //todo testing
+		this->value = value;
 	}
 
 	//dtor

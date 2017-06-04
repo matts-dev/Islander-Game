@@ -8,8 +8,14 @@ namespace ee {
 
 	class SpatialHash final
 	{
-		//table (array) of pointers to chains: nodes<(x,y), actor>
-		std::unique_ptr<std::shared_ptr<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>[]> hashMap;
+		//table (array) of pointers to chains: nodes<(x,y), actor> TODO remove this comment if changed to vector
+		//std::unique_ptr<std::shared_ptr<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>[]> hashMap;
+		std::vector<
+			std::shared_ptr<
+				HashNode<sf::Vector2i, std::weak_ptr<Actor>>
+			>
+		> hashMap;
+
 		int gridSize;
 		int tableSize;
 		int hornerNumber;
@@ -30,5 +36,9 @@ namespace ee {
 
 		//removes origional from table, then adds back to table in new position (only if necessary)
 		void updateFromTo(const float& oldX, const float& oldY, std::weak_ptr<Actor> actor, const float& newX, const float& newY);
+
+	private:
+		//helper functions
+		void initHashTable();
 	};
 }

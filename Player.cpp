@@ -1,5 +1,6 @@
 #include "Player.h"
 #include<SFML/Graphics.hpp>
+#include"SpatialHash.h"
 #include<cmath>
 
 using std::shared_ptr;
@@ -40,11 +41,14 @@ ee::Player::Player(const sf::Texture& texture, int widthPixels, int heightPixels
 	updateSwapDistance();
 	verticalWalkDistance = 0;
 	horrizontalWalkDistance = 0;
+
+	spatialHash_insertSelf();
 }
 
 
 ee::Player::~Player()
 {
+	spatialhash_removeSelf();
 }
 
 void ee::Player::draw(sf::RenderWindow & window) const
@@ -125,11 +129,15 @@ void ee::Player::moveDownRight()
 */
 void ee::Player::genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance)
 {
-	currentSprite->move(deltaX, deltaY);
-	horrizontalWalkDistance += deltaX;
-	verticalWalkDistance += deltaY;
-	updateSpriteImage(correctColumn);
-	updateImageBasedOnWalkDistance(correctColumn, primaryWalkDirectionDistance);
+	if (validMoveDelta(deltaX, deltaY)) {
+		//TODO rehash position
+		updateHashFromTo(deltaX, deltaY);
+		currentSprite->move(deltaX, deltaY);
+		horrizontalWalkDistance += deltaX;
+		verticalWalkDistance += deltaY;
+		updateSpriteImage(correctColumn);
+		updateImageBasedOnWalkDistance(correctColumn, primaryWalkDirectionDistance);
+	}
 }
 
 
@@ -206,6 +214,49 @@ float ee::Player::getAngularSpeed()
 	float result = std::powf(moveSpeed, 2);
 	result /= 2;
 	return std::powf(result, 0.5000f);
+}
+
+bool ee::Player::validMoveDelta(const float & deltaX, const float & deltaY)
+{
+	//check for collisions by getting neighbors from spatial hash map
+	if (currentSprite && Actor::spatialHash) {
+		//auto currPos = currentSprite->getPosition();
+		//auto nearbyActors = Actor::spatialHash->getNearby(currPos.x + deltaX, currPos.y + deltaY);
+
+		////check for collision with nearby actors
+		//for (auto iter : nearbyActors) {
+		//	//TODO call actor's collision method to deter if location is safe
+		//}
+	}
+	return true;
+}
+
+bool ee::Player::collides(const sf::IntRect & rectToTest) const
+{
+	return false;
+}
+
+void ee::Player::updateHashFromTo(const float & deltaX, const float & deltaY) 
+{
+	//if all conditions for spatial hash are met, and there is a current sprite
+	if (smartThis.lock() && Actor::spatialHash && currentSprite) {
+		auto curPos = currentSprite->getPosition();
+		Actor::spatialHash->updateFromTo(curPos.x, curPos.y, smartThis, curPos.x + deltaX, curPos.y + deltaY);
+	}
+}
+
+
+void ee::Player::spatialHash_insertSelf()
+{
+	auto shrThis = smartThis.lock();
+	if (shrThis && Actor::spatialHash && currentSprite) {
+		auto pos = currentSprite->getPosition();
+		spatialHash->add(pos.x, pos.y, shrThis);
+	}
+}
+
+void ee::Player::spatialhash_removeSelf()
+{
 }
 
 float ee::Player::getX()

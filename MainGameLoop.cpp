@@ -9,6 +9,7 @@
 
 int main() {
 	bool dev = true;
+	//TODO convert game to singleton since actor spatial hashing is singleton
 	ee::Game game;
 
     //round towards zero

@@ -1,20 +1,20 @@
 #include <cmath>
+#include <iostream>
 #include "Actor.h"
 #include "SpatialHash.h"
 
 using std::shared_ptr;
 using std::make_shared;
 
+/** grid size should be no smaller than the maximum actor size*/
 ee::SpatialHash::SpatialHash(int gridSize, int tableSize)
 	: gridSize(gridSize),
 	tableSize(tableSize),
-	hashMap(std::unique_ptr<shared_ptr<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>[]>(new shared_ptr<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>[tableSize])),
+	hashMap(tableSize),
 	hornerNumber(17)
 {
-	//initial table to nullptr
-	for (int i = 0; i < tableSize; ++i) {
-		hashMap[i] = nullptr;
-	}
+	initHashTable();
+
 }
 
 ee::SpatialHash::~SpatialHash()
@@ -88,7 +88,8 @@ std::vector<std::weak_ptr<ee::Actor>> ee::SpatialHash::getNearby(const float & x
 			int index = hashGrid(i, j);
 			auto iter = hashMap[index];
 			while (iter != nullptr) {
-				nearbyActorsContainer.push_back(iter->value);
+				std::weak_ptr<Actor> val = iter->value;
+				nearbyActorsContainer.push_back(val);
 				iter = iter->getNextNode();
 			}
 		}
@@ -101,6 +102,19 @@ void ee::SpatialHash::updateFromTo(const float & oldX, const float & oldY, std::
 {
 	remove(oldX, oldY, actor);
 	add(newX, newY, actor);
+}
+
+void ee::SpatialHash::initHashTable()
+{
+	//TODO clean up commented out code
+	//hashMap = std::unique_ptr<shared_ptr<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>[]>(new shared_ptr<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>[tableSize]);
+	//auto array = new shared_ptr<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>[tableSize];
+	//hashMap = std::unique_ptr<shared_ptr<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>[]>(array);
+
+	//initial table to nullptr
+	for (int i = 0; i < tableSize; ++i) {
+		hashMap[i] = nullptr;
+	}
 }
 
 
@@ -133,6 +147,7 @@ int ee::SpatialHash::hashGrid(const int & horrizontalGrid, const int & verticalG
 	}
 	hash %= tableSize;
 	hash = std::abs(hash);
+	std::cout << "\"hashGrid\" - x:" << horrizontalGrid << " y:" << verticalGrid << " hash:" << hash << std::endl;
 	return hash;
 }
 

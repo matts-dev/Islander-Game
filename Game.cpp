@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Defs.h"
 #include<iostream>
 #include<SFML/Graphics.hpp>
 #include<SFML/Window.hpp>
@@ -20,20 +21,26 @@ ee::Game::Game() : moveCamera(true)
 	//initialize all textures
 	textures = Textures::getInstance();
 	shared_ptr<sf::Texture const> actorTexture = textures->getActorSheet();
+	
+	//enable actor spatial hashing
+	Actor::initSpatialHash(GRIDSIZE, SPATIAL_HASH_NUM_BUCKETS);
 
 	//Create a camera (ie a view)
 	camera = make_shared<sf::View>();
 
 	//Create a player to control
 	auto player1 = make_shared<Player>(*actorTexture, 16, 16);
+	player1->enableSpatialHashing(player1);
 	controlTarget = player1;
 	player1->setScale(2.0f);
 	players.emplace_back(player1);
 
-	//Createa ship to pilot
+	//Create a ship to pilot
 	auto ship = make_shared<Ship>();
 	nonPlayerActors.emplace_back(ship);
 	ship->setPosition(500.f, 500.f);
+
+	//Actor::create(50.f);
 
 	//Enable developer mode features
 	developerMode = true;
