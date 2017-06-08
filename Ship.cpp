@@ -2,6 +2,7 @@
 #include "Textures.h"
 #include "RNG.h"
 #include <vector>
+#include "SpatialHash.h"
 
 //usings 
 using std::vector;
@@ -123,16 +124,41 @@ float ee::Ship::getY()
 
 void ee::Ship::spatialHash_insertSelf()
 {
-	//TODO not implemented
+	shared_ptr<Actor> sharedThis = smartThis.lock();
+	if (Actor::spatialHash && sharedThis) {
+		auto pos = getPosition();
+		Actor::spatialHash->add(pos.x, pos.y, sharedThis);
+	}
 }
 
 void ee::Ship::spatialhash_removeSelf()
 {
-	//TODO not implemented
+	shared_ptr<Actor> sharedThis = smartThis.lock();
+	if (Actor::spatialHash && sharedThis) {
+		auto pos = getPosition();
+		Actor::spatialHash->remove(pos.x, pos.y, sharedThis);
+	}
 }
 
-void ee::Ship::updateHashFromTo(const float & deltaX, const float & deltaY)
+void ee::Ship::updateHashFromTo(const float deltaX, const float deltaY)
 {
+	if (Actor::spatialHash && smartThis.lock() && components.size() > 0) {
+		//begin gauranteed not to equal end()
+		auto iter = components.begin();
+		auto currPos = (iter->second)->getPosition();
+		Actor::spatialHash->updateFromTo(currPos.x, currPos.y, smartThis, currPos.x + deltaX, currPos.y + deltaY);
+	}
+}
+
+sf::Vector2f ee::Ship::getPosition()
+{
+	if (components.size() > 0) {
+		//origion of all sprites should be same, regardless of the component.
+		for (auto peice : components) {
+			return (peice.second)->getPosition();
+		}
+	}
+	return sf::Vector2f();
 }
 
 

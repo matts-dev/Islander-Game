@@ -63,11 +63,15 @@ namespace ee {
 
 		virtual bool collides(const sf::IntRect & rectToTest) const override;
 
-		//TODO: clean up ship and player headers to make more readable 
+		// TODO: clean up ship and player headers to make more readable 
 		// spatial hashing (called automatically in actor constructor) 
 		virtual void spatialHash_insertSelf() override;
 		virtual void spatialhash_removeSelf() override;
-		virtual void updateHashFromTo(const float & deltaX, const float & deltaY) override;
+		virtual void updateHashFromTo(const float deltaX, const float deltaY) override;
+
+
+	private:
+		sf::Vector2f getPosition();
 
 	};
 };

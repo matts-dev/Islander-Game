@@ -39,6 +39,7 @@ ee::Game::Game() : moveCamera(true)
 	auto ship = make_shared<Ship>();
 	nonPlayerActors.emplace_back(ship);
 	ship->setPosition(500.f, 500.f);
+	ship->enableSpatialHashing(ship);
 
 	//Actor::create(50.f);
 

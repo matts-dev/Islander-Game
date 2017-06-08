@@ -42,7 +42,7 @@ namespace ee {
 		// Spatial Hashing Functions
 		virtual void spatialHash_insertSelf() override;
 		virtual void spatialhash_removeSelf() override;
-		virtual void updateHashFromTo(const float & deltaX, const float & deltaY) override;
+		virtual void updateHashFromTo(const float deltaX, const float deltaY) override;
 
 	private:
 		void genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance);

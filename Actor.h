@@ -18,7 +18,7 @@ namespace ee {
 		std::weak_ptr<Actor> smartThis;
 		virtual void spatialHash_insertSelf() = 0;
 		virtual void spatialhash_removeSelf() = 0;
-		virtual void updateHashFromTo(const float& deltaX, const float& deltaY) = 0;
+		virtual void updateHashFromTo(const float deltaX, const float deltaY) = 0;
 
 	protected:
 		float moveSpeed;

@@ -130,7 +130,6 @@ void ee::Player::moveDownRight()
 void ee::Player::genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance)
 {
 	if (validMoveDelta(deltaX, deltaY)) {
-		//TODO rehash position
 		updateHashFromTo(deltaX, deltaY);
 		currentSprite->move(deltaX, deltaY);
 		horrizontalWalkDistance += deltaX;
@@ -236,7 +235,7 @@ bool ee::Player::collides(const sf::IntRect & rectToTest) const
 	return false;
 }
 
-void ee::Player::updateHashFromTo(const float & deltaX, const float & deltaY) 
+void ee::Player::updateHashFromTo(const float deltaX, const float deltaY) 
 {
 	//if all conditions for spatial hash are met, and there is a current sprite
 	if (smartThis.lock() && Actor::spatialHash && currentSprite) {
@@ -251,7 +250,7 @@ void ee::Player::spatialHash_insertSelf()
 	auto shrThis = smartThis.lock();
 	if (shrThis && Actor::spatialHash && currentSprite) {
 		auto pos = currentSprite->getPosition();
-		spatialHash->add(pos.x, pos.y, shrThis);
+		spatialHash->add(pos.x, pos.y, smartThis);
 	}
 }
 
@@ -279,5 +278,4 @@ void ee::Player::getInNearbyVehicle()
 {
 	//TODO start here.
 	//Use spatial hashing or spatial mapping to determine nearby cells with vehicles?
-	
 }

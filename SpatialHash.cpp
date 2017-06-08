@@ -11,17 +11,17 @@ ee::SpatialHash::SpatialHash(int gridSize, int tableSize)
 	: gridSize(gridSize),
 	tableSize(tableSize),
 	hashMap(tableSize),
-	hornerNumber(17)
+	hornerNumber(17),
+	numHashedItems(0)
 {
 	initHashTable();
-
 }
 
 ee::SpatialHash::~SpatialHash()
 {
 }
 
-void ee::SpatialHash::add(const float & x, const float & y, std::weak_ptr<Actor> actor)
+void ee::SpatialHash::add(const float x, const float y, std::weak_ptr<Actor> actor)
 {
 	int index = hashFloat(x, y);
 	auto chain = hashMap[index];
@@ -36,14 +36,16 @@ void ee::SpatialHash::add(const float & x, const float & y, std::weak_ptr<Actor>
 	if (chain) {
 		auto newNode = std::make_shared<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>(gridXY, actor, nullptr);
 		chain->addNode(newNode);
+		++numHashedItems;
 	}
 	//no chain exists
 	else {
 		hashMap[index] = std::make_shared<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>(gridXY, actor, nullptr);
+		++numHashedItems;
 	}
 }
 
-bool ee::SpatialHash::remove(const float & x, const float & y, std::weak_ptr<Actor> actor)
+bool ee::SpatialHash::remove(const float x, const float y, std::weak_ptr<Actor> actor)
 {
 	int index = hashFloat(x, y);
 	auto chain = hashMap[index];
@@ -61,11 +63,13 @@ bool ee::SpatialHash::remove(const float & x, const float & y, std::weak_ptr<Act
 			auto nextInChain = chain->getNextNode();
 			hashMap[index] = nextInChain;
 			chain->setNextNode(nullptr);
+			--numHashedItems;
 			return true;
 		} 
 		//CHAIN CHILD TO BE REMOVED
 		else if (chain->getNextNode()) {
 			auto newNode = std::make_shared<HashNode<sf::Vector2i, std::weak_ptr<Actor>>>(gridXY, actor, nullptr);
+			--numHashedItems;
 			return chain->removeChild(newNode);
 		}
 	}
@@ -73,7 +77,7 @@ bool ee::SpatialHash::remove(const float & x, const float & y, std::weak_ptr<Act
 	return false;
 }
 
-std::vector<std::weak_ptr<ee::Actor>> ee::SpatialHash::getNearby(const float & x, const float & y)
+std::vector<std::weak_ptr<ee::Actor>> ee::SpatialHash::getNearby(const float x, const float y)
 {
 	std::vector<std::weak_ptr<ee::Actor>> nearbyActorsContainer;
 
@@ -98,10 +102,14 @@ std::vector<std::weak_ptr<ee::Actor>> ee::SpatialHash::getNearby(const float & x
 	return nearbyActorsContainer;
 }
 
-void ee::SpatialHash::updateFromTo(const float & oldX, const float & oldY, std::weak_ptr<Actor> actor, const float & newX, const float & newY)
+void ee::SpatialHash::updateFromTo(const float oldX, const float oldY, std::weak_ptr<Actor> actor, const float newX, const float newY)
 {
-	remove(oldX, oldY, actor);
-	add(newX, newY, actor);
+	bool shouldRehash = (getGrid(oldX) != getGrid(newX)) || (getGrid(oldY) != getGrid(newY));
+	if (shouldRehash) {
+		remove(oldX, oldY, actor);
+		add(newX, newY, actor);
+		std::cout << "updateFromTo; numHashEntries:" << numHashedItems << std::endl;
+	}
 }
 
 void ee::SpatialHash::initHashTable()
@@ -117,8 +125,13 @@ void ee::SpatialHash::initHashTable()
 	}
 }
 
+int ee::SpatialHash::getGrid(const float value)
+{
+	return static_cast<int>(value / gridSize);
+}
 
-int ee::SpatialHash::hashFloat(const float & x, const float & y)
+
+int ee::SpatialHash::hashFloat(const float x, const float y)
 {
 	//first subdivide into grids, then use horner's version of universal hash function on components
 	int horrizontalGrid = static_cast<int>(x / gridSize);
@@ -127,13 +140,13 @@ int ee::SpatialHash::hashFloat(const float & x, const float & y)
 	return hashGrid(horrizontalGrid, verticalGrid);
 }
 
-int ee::SpatialHash::hashGrid(const int & horrizontalGrid, const int & verticalGrid)
+int ee::SpatialHash::hashGrid(const int horrizontalGrid, const int verticalGrid)
 {
 	//make a single vector that contains bits for both the horrizontal and vertical grids
 	int64_t vector = horrizontalGrid;
 	vector <<= 32;	//make room for the vertical grid
 	vector |= verticalGrid; //OR in the vertical grid into bottom 32 bits
-	vector = std::abs(vector);
+	//vector = std::abs(vector);
 
 	//run hash function per byte
 	uint8_t byteMask = -1;
