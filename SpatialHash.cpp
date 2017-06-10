@@ -87,8 +87,8 @@ std::vector<std::weak_ptr<ee::Actor>> ee::SpatialHash::getNearby(const float x, 
 
 	int leftGrid = centerHorrGrid - 1;
 	int topGrid = centerVertGrid - 1;
-	for (int i = leftGrid; i < centerHorrGrid + 1; ++i) {
-		for (int j = topGrid; j < centerVertGrid + 1; ++j) {
+	for (int i = leftGrid; i <= centerHorrGrid + 1; ++i) {
+		for (int j = topGrid; j <= centerVertGrid + 1; ++j) {
 			int index = hashGrid(i, j);
 			auto iter = hashMap[index];
 			while (iter != nullptr) {

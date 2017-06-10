@@ -9,7 +9,7 @@ using std::vector;
 using std::make_shared;
 using std::shared_ptr;
 
-ee::Ship::Ship() : Actor(10.0f)
+ee::Ship::Ship() : Vehicle(10.0f)
 {
 	initPlankBlocks();
 	createRectangleOfPlankSprites();
@@ -159,6 +159,12 @@ sf::Vector2f ee::Ship::getPosition()
 		}
 	}
 	return sf::Vector2f();
+}
+
+bool ee::Ship::ActorCanBoard(std::shared_ptr<Actor> boardRequestingActor)
+{
+	//TODO implement
+	return false;
 }
 
 

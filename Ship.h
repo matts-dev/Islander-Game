@@ -1,5 +1,6 @@
 #pragma once
 #include"Actor.h"
+#include"Vehicle.h"
 #include<memory>
 #include<vector>
 #include<unordered_map>
@@ -8,7 +9,7 @@
 
 
 namespace ee {
-	class Ship : public Actor
+	class Ship : public Vehicle
 	{
 		//Texture blocks to use for copying
 		static std::vector<sf::Sprite> plankBlocks;
@@ -69,9 +70,11 @@ namespace ee {
 		virtual void spatialhash_removeSelf() override;
 		virtual void updateHashFromTo(const float deltaX, const float deltaY) override;
 
-
 	private:
 		sf::Vector2f getPosition();
+
+		// Inherited via Vehicle
+		virtual bool ActorCanBoard(std::shared_ptr<Actor> boardRequestingActor) override;
 
 	};
 };

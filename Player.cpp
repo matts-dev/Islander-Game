@@ -2,6 +2,8 @@
 #include<SFML/Graphics.hpp>
 #include"SpatialHash.h"
 #include<cmath>
+#include"Ship.h"
+#include<iostream>
 
 using std::shared_ptr;
 using std::make_shared;
@@ -276,6 +278,17 @@ float ee::Player::getY()
 
 void ee::Player::getInNearbyVehicle()
 {
-	//TODO start here.
+	//check if player already occupies a vehicle
+
 	//Use spatial hashing or spatial mapping to determine nearby cells with vehicles?
+	if (Actor::spatialHash && !smartThis.expired() && currentSprite) {
+		auto pos = currentSprite->getPosition();
+		auto allNearby = Actor::spatialHash->getNearby(pos.x, pos.y);
+		for (auto nearbyActor : allNearby) {
+			if (auto vehicle = std::dynamic_pointer_cast<ee::Vehicle>(nearbyActor.lock())) {
+				std::cout << "You're next to a vehicle!" << std::endl;
+				//
+			}
+		}
+	}
 }

@@ -64,11 +64,7 @@ namespace ee {
 		bool validMoveDelta(const float& deltaX, const float& deltaY);
 
 		virtual bool collides(const sf::IntRect & rectToTest) const override;
-
-
-
-
-
+		
 	};
 };
 

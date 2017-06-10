@@ -55,6 +55,7 @@ ee::Game::~Game()
 void ee::Game::io()
 {
 	ioMovement();
+	ioInteraction();
 	if (developerMode) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 			//for now will be the first ship of the game
