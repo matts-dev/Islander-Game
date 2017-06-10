@@ -17,8 +17,11 @@ namespace ee {
 
 		//Actual components that make up the ship (blocks you see)
 		std::unordered_map<short, std::shared_ptr<sf::Sprite>> components;
+		sf::RectangleShape boundingBox;
+		
+		//set to greater than 1.0f to make the bounding box larger than the ship
+		float bBoxAdtlScaleFactor = 1.0f;
 
-		//width should be event
 		char const widthBlocks = 7;
 		char const heightBlocks = 15;
 
@@ -33,6 +36,7 @@ namespace ee {
 		void positionCornerPeices();
 		void trimEdgeBlocksAway();
 		void calculateCenterLocation();
+		void setupBoundingBox();
 
 		/**convert x and y coordinate into a single short for indexing*/
 		short getPosKey(char x, char y);
@@ -47,7 +51,7 @@ namespace ee {
 
 		// Inherited via Actor
 		virtual void draw(sf::RenderWindow & window) const override;
-
+		
 		// Inherited via Actor
 		virtual void setScale(float scaleFactor) override;
 		virtual float getScale() override;
@@ -59,10 +63,10 @@ namespace ee {
 		virtual void moveUpRight() override;
 		virtual void moveDownLeft() override;
 		virtual void moveDownRight() override;
-		virtual float getX() override;
-		virtual float getY() override;
+		virtual float getX() const override;
+		virtual float getY() const override;
 
-		virtual bool collides(const sf::IntRect & rectToTest) const override;
+		virtual bool collides(std::shared_ptr<const Actor> otherActor) const override;
 
 		// TODO: clean up ship and player headers to make more readable 
 		// spatial hashing (called automatically in actor constructor) 
@@ -74,7 +78,7 @@ namespace ee {
 		sf::Vector2f getPosition();
 
 		// Inherited via Vehicle
-		virtual bool ActorCanBoard(std::shared_ptr<Actor> boardRequestingActor) override;
+		virtual bool actorValidForBoard(std::shared_ptr<Actor> boardRequestingActor) override;
 
 	};
 };

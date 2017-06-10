@@ -33,8 +33,8 @@ namespace ee {
 		virtual void moveUpRight() override;
 		virtual void moveDownLeft() override;
 		virtual void moveDownRight() override;
-		virtual float getX() override;
-		virtual float getY() override;
+		virtual float getX() const override;
+		virtual float getY() const override;
 
 		virtual void getInNearbyVehicle();
 
@@ -63,7 +63,7 @@ namespace ee {
 		/** Helper function that returns true if the player can be moved by the parameter delta values */
 		bool validMoveDelta(const float& deltaX, const float& deltaY);
 
-		virtual bool collides(const sf::IntRect & rectToTest) const override;
+		virtual bool collides(std::shared_ptr<const Actor> otherActor) const override;
 		
 	};
 };

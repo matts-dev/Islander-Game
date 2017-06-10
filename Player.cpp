@@ -4,6 +4,7 @@
 #include<cmath>
 #include"Ship.h"
 #include<iostream>
+#include<string>
 
 using std::shared_ptr;
 using std::make_shared;
@@ -121,13 +122,13 @@ void ee::Player::moveDownRight()
 }
 
 /**
-	Moves current sprite by deltaX and deltaY.
+Moves current sprite by deltaX and deltaY.
 
-	@param correctColumn - the column in sprite sheet for current direction
-	@param deltaX - the change in horrizontal distance to apply to sprite.
-	@param deltaY - the change in vertical distance to apply to sprite.
-	@param primaryWalkDirectionDistance - the distance walked to determine if image should be swapped.
-		this will either be verticalDistanceWalked or horrizontalDistanceWalked.
+@param correctColumn - the column in sprite sheet for current direction
+@param deltaX - the change in horrizontal distance to apply to sprite.
+@param deltaY - the change in vertical distance to apply to sprite.
+@param primaryWalkDirectionDistance - the distance walked to determine if image should be swapped.
+this will either be verticalDistanceWalked or horrizontalDistanceWalked.
 */
 void ee::Player::genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance)
 {
@@ -159,17 +160,17 @@ void ee::Player::updateSpriteImage(int correctColumn)
 
 
 /**
-	Updates the image based on a distance walked. correctColumn determines the direction
-	the sprite is currently facing. The current image of the direction is determined using
-	modulus and the distance the sprite has walked in the direction.
+Updates the image based on a distance walked. correctColumn determines the direction
+the sprite is currently facing. The current image of the direction is determined using
+modulus and the distance the sprite has walked in the direction.
 
-	@usage: Simply provide the correct column number (this determines direction) and
-	provide a value that represent the distance walked in the direction.
+@usage: Simply provide the correct column number (this determines direction) and
+provide a value that represent the distance walked in the direction.
 
-	@param correctColumn - the column representing the sprites direction (look at spritesheet file)
-	@param walkDistance - the distance walked in the direction (either horrizontal or vertical); for
-		upward and downward movements, provide vertical distance walked; for left or right movements,
-		provide horrizontal distance walked.
+@param correctColumn - the column representing the sprites direction (look at spritesheet file)
+@param walkDistance - the distance walked in the direction (either horrizontal or vertical); for
+upward and downward movements, provide vertical distance walked; for left or right movements,
+provide horrizontal distance walked.
 */
 void ee::Player::updateImageBasedOnWalkDistance(int correctColumn, float walkDistance)
 {
@@ -220,24 +221,28 @@ float ee::Player::getAngularSpeed()
 bool ee::Player::validMoveDelta(const float & deltaX, const float & deltaY)
 {
 	//check for collisions by getting neighbors from spatial hash map
-	if (currentSprite && Actor::spatialHash) {
-		//auto currPos = currentSprite->getPosition();
-		//auto nearbyActors = Actor::spatialHash->getNearby(currPos.x + deltaX, currPos.y + deltaY);
+	if (currentSprite && Actor::spatialHash && !smartThis.expired()) {
+		auto currPos = currentSprite->getPosition();
+		auto nearbyActors = Actor::spatialHash->getNearby(currPos.x + deltaX, currPos.y + deltaY);
 
-		////check for collision with nearby actors
-		//for (auto iter : nearbyActors) {
-		//	//TODO call actor's collision method to deter if location is safe
-		//}
+		//check for collision with nearby actors
+		for (auto iter : nearbyActors) {
+			if (auto otherActor = iter.lock()) {
+				if (otherActor->collides(smartThis.lock())) {
+					return false;
+				}
+			}
+		}
 	}
 	return true;
 }
 
-bool ee::Player::collides(const sf::IntRect & rectToTest) const
+bool ee::Player::collides(std::shared_ptr<const Actor> otherActor) const
 {
 	return false;
 }
 
-void ee::Player::updateHashFromTo(const float deltaX, const float deltaY) 
+void ee::Player::updateHashFromTo(const float deltaX, const float deltaY)
 {
 	//if all conditions for spatial hash are met, and there is a current sprite
 	if (smartThis.lock() && Actor::spatialHash && currentSprite) {
@@ -260,7 +265,7 @@ void ee::Player::spatialhash_removeSelf()
 {
 }
 
-float ee::Player::getX()
+float ee::Player::getX() const
 {
 	if (currentSprite) {
 		return currentSprite->getPosition().x;
@@ -268,7 +273,7 @@ float ee::Player::getX()
 	return 0.f;
 }
 
-float ee::Player::getY()
+float ee::Player::getY() const
 {
 	if (currentSprite) {
 		return currentSprite->getPosition().y;
@@ -287,7 +292,8 @@ void ee::Player::getInNearbyVehicle()
 		for (auto nearbyActor : allNearby) {
 			if (auto vehicle = std::dynamic_pointer_cast<ee::Vehicle>(nearbyActor.lock())) {
 				std::cout << "You're next to a vehicle!" << std::endl;
-				//
+				std::string str = (vehicle->actorValidForBoard(smartThis.lock())) ? "true" : "false";
+				std::cout << "close enough to board: " << str << std::endl;
 			}
 		}
 	}

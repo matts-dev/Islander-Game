@@ -1,11 +1,16 @@
 #pragma once
 #include "Actor.h"
 #include<memory>
+#include<map>
 
 namespace ee {
 
 	class Vehicle : public Actor
 	{
+	private:
+		//map container for quick lookup
+		std::map<Actor*, std::weak_ptr<Actor>> occupants;
+
 	public:
 		Vehicle(float movementSpeed);
 		virtual ~Vehicle();
@@ -23,7 +28,7 @@ namespace ee {
 		*/
 		virtual bool attemptActorRemove(std::shared_ptr<Actor> leavingActor);
 
-		virtual bool ActorCanBoard(std::shared_ptr<Actor> boardRequestingActor) = 0;
+		virtual bool actorValidForBoard(std::shared_ptr<Actor> boardRequestingActor) = 0;
 	};
 }//end namespace ee
 

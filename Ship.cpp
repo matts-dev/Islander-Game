@@ -15,7 +15,7 @@ ee::Ship::Ship() : Vehicle(10.0f)
 	createRectangleOfPlankSprites();
 	handleShipCorners();
 	calculateCenterLocation();
-
+	setupBoundingBox();
 }
 
 ee::Ship::~Ship()
@@ -28,6 +28,7 @@ void ee::Ship::setRotation(float rotationInDegrees)
 	for (auto it : components) {
 		(it.second)->setRotation(rotationInDegrees);
 	}
+	boundingBox.setRotation(rotationInDegrees);
 }
 
 /** Get rotation in degrees */
@@ -42,25 +43,35 @@ float ee::Ship::getRotation()
 
 void ee::Ship::setPosition(float x, float y)
 {
+	//update spatial hashing if set up
+	if (Actor::spatialHash && !smartThis.expired()) {
+		auto pos = boundingBox.getPosition();
+		Actor::spatialHash->updateFromTo(pos.x, pos.y, smartThis, x, y);
+	}
+
+	//update every component
 	for (auto it : components) {
 		(it.second)->setPosition(x, y);
 	}
+	boundingBox.setPosition(x, y);
 }
 
 
 void ee::Ship::draw(sf::RenderWindow & window) const
 {
+	//draw bounding box (helpful for debuggin)
+	window.draw(boundingBox);
 
 	//iterate over the entire components and draw, STL gaurantees iterators are O(n)
 	for (auto it : this->components) {
 		window.draw(*(it.second));
 	}
 
-
 }
 
 void ee::Ship::setScale(float scaleFactor)
 {
+	boundingBox.setScale(scaleFactor * bBoxAdtlScaleFactor, scaleFactor * bBoxAdtlScaleFactor);
 	for (auto aComponent : components) {
 		aComponent.second->setScale(scaleFactor, scaleFactor);
 	}
@@ -108,14 +119,14 @@ void ee::Ship::moveDownRight()
 {
 }
 
-float ee::Ship::getX()
+float ee::Ship::getX() const
 {
 	auto iter = components.begin();
 	//from the iter, get the second(sprite pointer), get the position, and get desired value!
 	return iter->second->getPosition().x;
 }
 
-float ee::Ship::getY()
+float ee::Ship::getY() const
 {
 	auto iter = components.begin();
 	//from the iter, get the second(sprite pointer), get the position, and get desired value!
@@ -153,7 +164,7 @@ void ee::Ship::updateHashFromTo(const float deltaX, const float deltaY)
 sf::Vector2f ee::Ship::getPosition()
 {
 	if (components.size() > 0) {
-		//origion of all sprites should be same, regardless of the component.
+		//origin of all sprites should be same, regardless of the component.
 		for (auto peice : components) {
 			return (peice.second)->getPosition();
 		}
@@ -161,17 +172,32 @@ sf::Vector2f ee::Ship::getPosition()
 	return sf::Vector2f();
 }
 
-bool ee::Ship::ActorCanBoard(std::shared_ptr<Actor> boardRequestingActor)
+bool ee::Ship::actorValidForBoard(std::shared_ptr<Actor> boardRequestingActor)
 {
-	//TODO implement
+	//TODO change this to call collides instead
+	float x = boardRequestingActor->getX();
+	float y = boardRequestingActor->getY();
+
+	if (boundingBox.getGlobalBounds().contains(x, y)) {
+		//TODO add more complex behavior (ie corners shouldn't allow boarding); 
+		//TODO otherwise simply return the result of the expression above
+		return true;
+	}
 	return false;
 }
 
 
 
-bool ee::Ship::collides(const sf::IntRect & rectToTest) const
+bool ee::Ship::collides(std::shared_ptr<const Actor> otherActor) const
 {
+	float x = otherActor->getX();
+	float y = otherActor->getY();
 
+	if (boundingBox.getGlobalBounds().contains(x, y)) {
+		//TODO add more complex behavior (ie corners shouldn't allow boarding); 
+		//TODO otherwise simply return the result of the expression above
+		return true;
+	}
 	return false;
 }
 
@@ -344,4 +370,15 @@ void ee::Ship::calculateCenterLocation()
 		(it.second)->setOrigin(centerX - pos.x, centerY - pos.y);
 		(it.second)->setPosition(0, 0);
 	}
+}
+
+void ee::Ship::setupBoundingBox()
+{
+	float blockSize = static_cast<float>(plankBlocks[0].getTextureRect().width);
+	boundingBox.setSize(sf::Vector2f(widthBlocks * blockSize, heightBlocks * blockSize));
+
+	auto size = boundingBox.getSize();
+	boundingBox.setOrigin(size.x / 2.f, size.y / 2.f);
+
+	boundingBox.setScale(1 * bBoxAdtlScaleFactor, 1 * bBoxAdtlScaleFactor);
 }

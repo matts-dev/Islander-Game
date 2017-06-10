@@ -43,10 +43,10 @@ namespace ee {
 		virtual void moveDownRight() = 0;
 
 		//Getters
-		virtual float getX() = 0;
-		virtual float getY() = 0;
+		virtual float getX() const = 0;
+		virtual float getY() const = 0;
 
-		virtual bool collides(const sf::IntRect& rectToTest) const = 0;
+		virtual bool collides(std::shared_ptr<const Actor> otherActor) const = 0;
 	};
 };
 

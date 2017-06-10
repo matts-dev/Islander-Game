@@ -79,6 +79,7 @@ bool ee::SpatialHash::remove(const float x, const float y, std::weak_ptr<Actor> 
 
 std::vector<std::weak_ptr<ee::Actor>> ee::SpatialHash::getNearby(const float x, const float y)
 {
+	//TODO this appears to be really in efficient in terms of CPU power, perhaps creating a isDirty pattern to improve performance
 	std::vector<std::weak_ptr<ee::Actor>> nearbyActorsContainer;
 
 	//for all 9 grids surrounding the center grid
