@@ -61,9 +61,9 @@ namespace ee {
 		float getAngularSpeed();
 
 		/** Helper function that returns true if the player can be moved by the parameter delta values */
-		bool validMoveDelta(const float& deltaX, const float& deltaY);
+		bool validMoveDelta(const float deltaX, const float deltaY);
 
-		virtual bool collides(std::shared_ptr<const Actor> otherActor) const override;
+		virtual bool collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX = 0, const float deltaY = 0) const override;
 		
 	};
 };

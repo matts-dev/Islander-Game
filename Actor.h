@@ -47,7 +47,8 @@ namespace ee {
 		virtual float getX() const = 0;
 		virtual float getY() const = 0;
 
-		virtual bool collides(std::shared_ptr<const Actor> otherActor) const = 0;
+		//TODO: change methods to take references for performance 
+		virtual bool collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX = 0, const float deltaY = 0) const = 0;
 	};
 };
 

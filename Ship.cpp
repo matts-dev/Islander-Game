@@ -2,7 +2,9 @@
 #include "Textures.h"
 #include "RNG.h"
 #include <vector>
+#include <iostream>
 #include "SpatialHash.h"
+
 
 //usings 
 using std::vector;
@@ -188,14 +190,15 @@ bool ee::Ship::actorValidForBoard(std::shared_ptr<Actor> boardRequestingActor)
 
 
 
-bool ee::Ship::collides(std::shared_ptr<const Actor> otherActor) const
+bool ee::Ship::collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX, const float deltaY) const
 {
 	float x = otherActor->getX();
 	float y = otherActor->getY();
 
-	if (boundingBox.getGlobalBounds().contains(x, y)) {
+	if (boundingBox.getGlobalBounds().contains(x + deltaX, y + deltaY)) {
 		//TODO add more complex behavior (ie corners shouldn't allow boarding); 
 		//TODO otherwise simply return the result of the expression above
+		std::cout << "REMOVE PERF HIT: ship collids is true" << std::endl;
 		return true;
 	}
 	return false;

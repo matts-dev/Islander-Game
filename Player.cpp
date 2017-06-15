@@ -218,7 +218,7 @@ float ee::Player::getAngularSpeed()
 	return std::powf(result, 0.5000f);
 }
 
-bool ee::Player::validMoveDelta(const float & deltaX, const float & deltaY)
+bool ee::Player::validMoveDelta(const float deltaX, const float deltaY)
 {
 	//check for collisions by getting neighbors from spatial hash map
 	if (currentSprite && Actor::spatialHash && !smartThis.expired()) {
@@ -228,7 +228,9 @@ bool ee::Player::validMoveDelta(const float & deltaX, const float & deltaY)
 		//check for collision with nearby actors
 		for (auto iter : nearbyActors) {
 			if (auto otherActor = iter.lock()) {
-				if (otherActor->collides(smartThis.lock())) {
+				// needs to consider new value
+				const auto smartThisShared = smartThis.lock();
+				if (otherActor->collides(smartThisShared, deltaX, deltaY)) {
 					return false;
 				}
 			}
@@ -237,7 +239,7 @@ bool ee::Player::validMoveDelta(const float & deltaX, const float & deltaY)
 	return true;
 }
 
-bool ee::Player::collides(std::shared_ptr<const Actor> otherActor) const
+bool ee::Player::collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX, const float deltaY) const
 {
 	return false;
 }

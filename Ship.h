@@ -66,10 +66,9 @@ namespace ee {
 		virtual float getX() const override;
 		virtual float getY() const override;
 
-		virtual bool collides(std::shared_ptr<const Actor> otherActor) const override;
+		virtual bool collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX = 0, const float deltaY = 0) const override;
 
 		// TODO: clean up ship and player headers to make more readable 
-		// spatial hashing (called automatically in actor constructor) 
 		virtual void spatialHash_insertSelf() override;
 		virtual void spatialhash_removeSelf() override;
 		virtual void updateHashFromTo(const float deltaX, const float deltaY) override;
