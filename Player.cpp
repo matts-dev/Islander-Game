@@ -223,7 +223,7 @@ bool ee::Player::validMoveDelta(const float & deltaX, const float & deltaY)
 	//check for collisions by getting neighbors from spatial hash map
 	if (currentSprite && Actor::spatialHash && !smartThis.expired()) {
 		auto currPos = currentSprite->getPosition();
-		auto nearbyActors = Actor::spatialHash->getNearby(currPos.x + deltaX, currPos.y + deltaY);
+		Actor::spatialHash->getNearby(currPos.x + deltaX, currPos.y + deltaY, this->nearbyActors);
 
 		//check for collision with nearby actors
 		for (auto iter : nearbyActors) {
@@ -288,8 +288,8 @@ void ee::Player::getInNearbyVehicle()
 	//Use spatial hashing or spatial mapping to determine nearby cells with vehicles?
 	if (Actor::spatialHash && !smartThis.expired() && currentSprite) {
 		auto pos = currentSprite->getPosition();
-		auto allNearby = Actor::spatialHash->getNearby(pos.x, pos.y);
-		for (auto nearbyActor : allNearby) {
+		Actor::spatialHash->getNearby(pos.x, pos.y, this->nearbyActors);
+		for (auto nearbyActor : nearbyActors) {
 			if (auto vehicle = std::dynamic_pointer_cast<ee::Vehicle>(nearbyActor.lock())) {
 				std::cout << "You're next to a vehicle!" << std::endl;
 				std::string str = (vehicle->actorValidForBoard(smartThis.lock())) ? "true" : "false";

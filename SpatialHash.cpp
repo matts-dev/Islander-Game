@@ -77,10 +77,10 @@ bool ee::SpatialHash::remove(const float x, const float y, std::weak_ptr<Actor> 
 	return false;
 }
 
-std::vector<std::weak_ptr<ee::Actor>> ee::SpatialHash::getNearby(const float x, const float y)
+void ee::SpatialHash::getNearby(const float x, const float y, std::vector<std::weak_ptr<Actor>>& nearbyActorsContainer)
 {
-	//TODO this appears to be really in efficient in terms of CPU power, perhaps creating a isDirty pattern to improve performance
-	std::vector<std::weak_ptr<ee::Actor>> nearbyActorsContainer;
+	//empty container
+	nearbyActorsContainer.clear();
 
 	//for all 9 grids surrounding the center grid
 	int centerHorrGrid = static_cast<int>(x / gridSize);
@@ -99,8 +99,6 @@ std::vector<std::weak_ptr<ee::Actor>> ee::SpatialHash::getNearby(const float x, 
 			}
 		}
 	}
-
-	return nearbyActorsContainer;
 }
 
 void ee::SpatialHash::updateFromTo(const float oldX, const float oldY, std::weak_ptr<Actor> actor, const float newX, const float newY)
@@ -145,9 +143,8 @@ int ee::SpatialHash::hashGrid(const int horrizontalGrid, const int verticalGrid)
 {
 	//make a single vector that contains bits for both the horrizontal and vertical grids
 	int64_t vector = horrizontalGrid;
-	vector <<= 32;	//make room for the vertical grid
-	vector |= verticalGrid; //OR in the vertical grid into bottom 32 bits
-	//vector = std::abs(vector);
+	vector <<= 32;							//make room for the vertical grid
+	vector |= verticalGrid;					//OR in the vertical grid into bottom 32 bits
 
 	//run hash function per byte
 	uint8_t byteMask = -1;
@@ -161,7 +158,9 @@ int ee::SpatialHash::hashGrid(const int horrizontalGrid, const int verticalGrid)
 	}
 	hash %= tableSize;
 	hash = std::abs(hash);
-	std::cout << "\"hashGrid\" - x:" << horrizontalGrid << " y:" << verticalGrid << " hash:" << hash << std::endl;
+
+	//std::cout << "\"hashGrid\" - x:" << horrizontalGrid << " y:" << verticalGrid << " hash:" << hash << std::endl; //massive perf hit
+
 	return hash;
 }
 

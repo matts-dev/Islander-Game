@@ -22,6 +22,7 @@ namespace ee {
 		int hashFloat(const float x, const float y);
 		int hashGrid(const int horrizontalGrid, const int verticalGrid);
 		int numHashedItems;
+
 	public:
 		SpatialHash(int gridSize, int tableSize);
 		~SpatialHash();
@@ -33,7 +34,7 @@ namespace ee {
 		bool remove(const float x, const float y, std::weak_ptr<Actor> actor);
 
 		//get a vector of actors in the grid and all neighboring grids
-		std::vector<std::weak_ptr<Actor>> getNearby(const float x, const float y);
+		void getNearby(const float x, const float y, std::vector<std::weak_ptr<Actor>>& buffer);
 
 		//removes origional from table, then adds back to table in new position (only if necessary)
 		void updateFromTo(const float oldX, const float oldY, std::weak_ptr<Actor> actor, const float newX, const float newY);

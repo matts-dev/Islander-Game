@@ -19,6 +19,7 @@ namespace ee {
 		virtual void spatialHash_insertSelf() = 0;
 		virtual void spatialhash_removeSelf() = 0;
 		virtual void updateHashFromTo(const float deltaX, const float deltaY) = 0;
+		std::vector<std::weak_ptr<Actor>> nearbyActors;
 
 	protected:
 		float moveSpeed;
