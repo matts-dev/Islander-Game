@@ -45,7 +45,7 @@ namespace ee {
 		virtual void updateHashFromTo(const float deltaX, const float deltaY) override;
 
 	private:
-		void genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance);
+		void genericMove(int correctColumn, float deltaX, float deltaY, const float primaryWalkDirectionDistance);
 		//helper functions
 		/** the distance walked before an image swap is warrented*/
 		int swapDistance; 

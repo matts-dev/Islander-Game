@@ -130,7 +130,7 @@ Moves current sprite by deltaX and deltaY.
 @param primaryWalkDirectionDistance - the distance walked to determine if image should be swapped.
 this will either be verticalDistanceWalked or horrizontalDistanceWalked.
 */
-void ee::Player::genericMove(int correctColumn, float deltaX, float deltaY, const float& primaryWalkDirectionDistance)
+void ee::Player::genericMove(int correctColumn, float deltaX, float deltaY, const float primaryWalkDirectionDistance)
 {
 	if (validMoveDelta(deltaX, deltaY)) {
 		updateHashFromTo(deltaX, deltaY);
