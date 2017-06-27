@@ -65,6 +65,7 @@ namespace ee {
 		virtual void moveDownRight() override;
 		virtual float getX() const override;
 		virtual float getY() const override;
+		virtual void updateCollisionBoxes(const float deltaX = 0, const float deltaY = 0) const override;
 
 		virtual bool collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX = 0, const float deltaY = 0) const override;
 
@@ -78,6 +79,7 @@ namespace ee {
 
 		// Inherited via Vehicle
 		virtual bool actorValidForBoard(std::shared_ptr<Actor> boardRequestingActor) override;
+		virtual void prepareCollisionBoxes() const override;
 
 	};
 };

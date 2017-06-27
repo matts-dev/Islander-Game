@@ -1,5 +1,7 @@
 #pragma once
 #include<vector>
+#include<SFML/System.hpp>
+
 
 namespace ee {
 	/** A class that houses utility functions */
@@ -17,16 +19,17 @@ namespace ee {
 			struct Point {
 				float x = 0;
 				float y = 0;
-				Point(float x, float y) : x(x), y(y) {}
+				Point(float x = 0, float y = 0) : x(x), y(y) {}
 			};
 
 			/** Rectangled defined in terms of points */
 			struct Rect {
-				Point pnt1;
-				Point pnt2;
-				Point pnt3;
-				Point pnt4;
+				Point pntTopLeft;
+				Point pntTopRight;
+				Point pntBottomRight;
+				Point pntBottomLeft;
 				float rotation;
+				Rect() : pntTopLeft(), pntTopRight(), pntBottomRight(), pntBottomLeft(), rotation(0) {}
 			};
 
 			/** slope intercept line */
@@ -48,6 +51,8 @@ namespace ee {
 			bool createLine(const Point& pnt1, const Point& pnt2, Line& bufferLine);
 			bool segmentsIntersect(const Segment& seg1, const Segment& seg2);
 			bool lineIntersects(const Line& line1, const Line& line2, Point& bufferForResult);
+
+			void vector2fToPnt(const sf::Vector2f & vec2, Point & pointToUpdate);
 		}
 	}
 }

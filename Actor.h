@@ -1,6 +1,8 @@
 #pragma once
 #include<SFML/Graphics.hpp>
 #include<memory>
+#include<vector>
+#include"Utility.h"
 
 namespace ee {
 	/*
@@ -15,6 +17,7 @@ namespace ee {
 		void enableSpatialHashing(std::weak_ptr<Actor> smartPointerToSelf);
 
 	protected:
+		//spatial hashing stuff
 		std::weak_ptr<Actor> smartThis;
 		virtual void spatialHash_insertSelf() = 0;
 		virtual void spatialhash_removeSelf() = 0;
@@ -23,6 +26,9 @@ namespace ee {
 
 	protected:
 		float moveSpeed;
+
+		//** simply a container for temporary collision boxes, changing in state isn't important for constness*/ //TODO move to interface 
+		mutable std::vector<utility::mxb::Rect> collisionBoxes;
 
 		Actor(float moveSpeed);
 	public:
@@ -48,7 +54,12 @@ namespace ee {
 		virtual float getY() const = 0;
 
 		//TODO: change methods to take references for performance 
+		//TODO refactor collision box stuff to an interface to reduce the actor class?
 		virtual bool collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX = 0, const float deltaY = 0) const = 0;
+		virtual void updateCollisionBoxes(const float deltaX, const float deltaY) const = 0;
+		void rectFromTransform(utility::mxb::Rect& buffer, const sf::Transform& transform, const sf::Vector2f& deltaXY, sf::Vector2f& scaledSizeXY) const;
+		virtual const std::vector<utility::mxb::Rect>& getCollisionRect(const float deltaX = 0, const float deltaY = 0) const;
+		virtual void prepareCollisionBoxes() const = 0;
 	};
 };
 

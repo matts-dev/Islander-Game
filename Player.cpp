@@ -46,6 +46,8 @@ ee::Player::Player(const sf::Texture& texture, int widthPixels, int heightPixels
 	horrizontalWalkDistance = 0;
 
 	spatialHash_insertSelf();
+
+	prepareCollisionBoxes();
 }
 
 
@@ -244,6 +246,12 @@ bool ee::Player::collides(const std::shared_ptr<const Actor>& otherActor, const 
 	return false;
 }
 
+void ee::Player::prepareCollisionBoxes() const
+{
+	//create a single rectangle to be maintained by the player 
+	collisionBoxes.resize(1);
+}
+
 void ee::Player::updateHashFromTo(const float deltaX, const float deltaY)
 {
 	//if all conditions for spatial hash are met, and there is a current sprite
@@ -297,6 +305,35 @@ void ee::Player::getInNearbyVehicle()
 				std::string str = (vehicle->actorValidForBoard(smartThis.lock())) ? "true" : "false";
 				std::cout << "close enough to board: " << str << std::endl;
 			}
+		}
+	}
+}
+
+void ee::Player::updateCollisionBoxes(const float deltaX, const float deltaY) const
+{
+	//TODO implement
+	if (currentSprite) {
+		if (const sf::Texture* text = currentSprite->getTexture()) {
+			float scaleX = currentSprite->getScale().x;
+			float scaleY = currentSprite->getScale().y;
+			float scaledWidth = text->getSize().x * scaleX; // ADD DELTA X, and this should be the POSITION + texture size TODO start here!
+			float scaledHeight = text->getSize().y * scaleY;
+
+			//sf::Vector2f futurePnt = currentSprite->getPosition();
+			sf::Vector2f futurePnt(deltaX, deltaY);
+			//futurePnt.x += deltaX; TODO: remove; transform should calculate the current position?
+			//futurePnt.y += deltaY;
+
+			//deltaX is used to calculate the future position of the move, topLeft would be 0 , 0 but instead is 0+ deltaX, 0 + deltaY
+			sf::Vector2f topLeft = currentSprite->getTransform().transformPoint(sf::Vector2f(futurePnt.x, futurePnt.y));
+			sf::Vector2f topRight = currentSprite->getTransform().transformPoint(sf::Vector2f(scaledWidth + futurePnt.x, futurePnt.y));
+			sf::Vector2f bottomLeft = currentSprite->getTransform().transformPoint(sf::Vector2f(futurePnt.x, scaledHeight + futurePnt.y));
+			sf::Vector2f bottomRight = currentSprite->getTransform().transformPoint(sf::Vector2f(scaledWidth + futurePnt.x, scaledHeight + futurePnt.y));
+
+			vector2fToPnt(topLeft, collisionBoxes[0].pntTopLeft);
+			vector2fToPnt(topRight, collisionBoxes[0].pntTopRight);
+			vector2fToPnt(bottomLeft, collisionBoxes[0].pntBottomLeft);
+			vector2fToPnt(bottomRight, collisionBoxes[0].pntBottomRight);
 		}
 	}
 }

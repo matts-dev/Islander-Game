@@ -37,9 +37,10 @@ namespace ee {
 		virtual float getY() const override;
 
 		virtual void getInNearbyVehicle();
+		virtual void updateCollisionBoxes(const float deltaX = 0, const float deltaY = 0) const override;
 
 	private:
-		// Spatial Hashing Functions
+		// Spatial Hashing Functions 
 		virtual void spatialHash_insertSelf() override;
 		virtual void spatialhash_removeSelf() override;
 		virtual void updateHashFromTo(const float deltaX, const float deltaY) override;
@@ -64,7 +65,8 @@ namespace ee {
 		bool validMoveDelta(const float deltaX, const float deltaY);
 
 		virtual bool collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX = 0, const float deltaY = 0) const override;
-		
+		virtual void prepareCollisionBoxes() const;
+
 	};
 };
 

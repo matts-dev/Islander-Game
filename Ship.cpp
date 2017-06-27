@@ -18,6 +18,7 @@ ee::Ship::Ship() : Vehicle(10.0f)
 	handleShipCorners();
 	calculateCenterLocation();
 	setupBoundingBox();
+	prepareCollisionBoxes();
 }
 
 ee::Ship::~Ship()
@@ -188,6 +189,22 @@ bool ee::Ship::actorValidForBoard(std::shared_ptr<Actor> boardRequestingActor)
 	return false;
 }
 
+void ee::Ship::prepareCollisionBoxes() const
+{
+	collisionBoxes.resize(1);
+}
+
+void ee::Ship::updateCollisionBoxes(const float deltaX, const float deltaY) const
+{
+	//TODO IMPLEMENT
+	sf::Vector2f futurePnt(deltaX, deltaY);
+	const sf::Vector2f& size = boundingBox.getSize();
+	const sf::Vector2f& scale = boundingBox.getScale();
+	sf::Vector2f scaledSize(size.x * scale.x, size.y * scale.y);
+
+	rectFromTransform(collisionBoxes[0], boundingBox.getTransform(), sf::Vector2f(deltaX, deltaY), scaledSize);
+}
+
 
 
 bool ee::Ship::collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX, const float deltaY) const
@@ -195,12 +212,23 @@ bool ee::Ship::collides(const std::shared_ptr<const Actor>& otherActor, const fl
 	float x = otherActor->getX();
 	float y = otherActor->getY();
 
-	if (boundingBox.getGlobalBounds().contains(x + deltaX, y + deltaY)) {
-		//TODO add more complex behavior (ie corners shouldn't allow boarding); 
-		//TODO otherwise simply return the result of the expression above
-		std::cout << "REMOVE PERF HIT: ship collids is true" << std::endl;
-		return true;
+	//if (boundingBox.getGlobalBounds().contains(x + deltaX, y + deltaY)) {
+	//	//TODO add more complex behavior (ie corners shouldn't allow boarding); 
+	//	//TODO otherwise simply return the result of the expression above
+	//	std::cout << "REMOVE PERF HIT: ship collids is true" << std::endl;
+	//	return true;
+	//}
+
+	// O(n^2) in theory, but O(1) in practicality
+	// Very {very} rarely will there be more than 1 owned collision box by a given actor
+	for (utility::mxb::Rect otherCollisionBox : otherActor->getCollisionRect(deltaX, deltaY)) {
+		for (utility::mxb::Rect thisCollisionBox : getCollisionRect()){
+			if(utility::mxb::collision(otherCollisionBox, thisCollisionBox)) {
+				return true;
+			}
+		}
 	}
+
 	return false;
 }
 

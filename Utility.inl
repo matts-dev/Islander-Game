@@ -1,4 +1,3 @@
-//#include "Utility.h"
 
 template<typename T>
 inline bool ee::utility::valueInRange(const T value, const T min, const T max) {

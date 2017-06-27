@@ -23,14 +23,15 @@ bool ee::utility::mxb::collision(const Rect& first, const Rect& second)
 bool ee::utility::mxb::rectToSegments(const Rect & points, std::vector<Segment>& segBuffer)
 {
 	segBuffer.clear();
-	for (int i = 0; i < 4; ++i) {
-		segBuffer.push_back(Segment());
-	}
+	//for (int i = 0; i < 4; ++i) {
+	//	segBuffer.push_back(Segment());
+	//} //TODO delete this if not necessary
+	segBuffer.resize(4);
 
-	bool ret = createSegment(points.pnt1, points.pnt2, segBuffer[0]);
-	ret &= createSegment(points.pnt2, points.pnt3, segBuffer[1]);
-	ret &= createSegment(points.pnt3, points.pnt4, segBuffer[2]);
-	ret &= createSegment(points.pnt4, points.pnt1, segBuffer[3]);
+	bool ret = createSegment(points.pntTopLeft, points.pntTopRight, segBuffer[0]);
+	ret &= createSegment(points.pntTopRight, points.pntBottomRight, segBuffer[1]);
+	ret &= createSegment(points.pntBottomRight, points.pntBottomLeft, segBuffer[2]);
+	ret &= createSegment(points.pntBottomLeft, points.pntTopLeft, segBuffer[3]);
 
 	return ret;
 }
@@ -95,6 +96,12 @@ bool ee::utility::mxb::lineIntersects(const Line& line1, const Line& line2, Poin
 		return true;
 	}
 	return false;
+}
+
+void ee::utility::mxb::vector2fToPnt(const sf::Vector2f & vec2, Point & pointToUpdate)
+{
+	pointToUpdate.x = vec2.x;
+	pointToUpdate.y = vec2.y;
 }
 
 bool ee::utility::floatIsZero(const float value, const float delta)
