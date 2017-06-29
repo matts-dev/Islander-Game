@@ -202,7 +202,7 @@ void ee::Ship::updateCollisionBoxes(const float deltaX, const float deltaY) cons
 	const sf::Vector2f& scale = boundingBox.getScale();
 	sf::Vector2f scaledSize(size.x * scale.x, size.y * scale.y);
 
-	rectFromTransform(collisionBoxes[0], boundingBox.getTransform(), sf::Vector2f(deltaX, deltaY), scaledSize);
+	rectFromCenteredTransform(collisionBoxes[0], boundingBox, sf::Vector2f(deltaX, deltaY), scaledSize);
 }
 
 
@@ -223,7 +223,7 @@ bool ee::Ship::collides(const std::shared_ptr<const Actor>& otherActor, const fl
 	// Very {very} rarely will there be more than 1 owned collision box by a given actor
 	for (utility::mxb::Rect otherCollisionBox : otherActor->getCollisionRect(deltaX, deltaY)) {
 		for (utility::mxb::Rect thisCollisionBox : getCollisionRect()){
-			if(utility::mxb::collision(otherCollisionBox, thisCollisionBox)) {
+			if(utility::mxb::collision(otherCollisionBox, thisCollisionBox)) { //TODO start here and see what is needed to get this working
 				return true;
 			}
 		}

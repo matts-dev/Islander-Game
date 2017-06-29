@@ -16,6 +16,8 @@ namespace ee {
 
 		//construtor helper functions
 		void initSpriteSheet(const sf::Texture& texture, int widthPixels, int heightPixels);
+		sf::Vector2i unscaledSize;
+
 	public:
 		Player(const sf::Texture& texture, int widthPixels, int heightPixels);
 		virtual ~Player();

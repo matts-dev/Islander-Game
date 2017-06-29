@@ -26,12 +26,17 @@ void ee::Player::initSpriteSheet(const sf::Texture& texture, int widthPixels, in
 			int top = j * heightPixels;
 
 			auto currPtr = make_shared<sf::Sprite>(texture, sf::IntRect(left, top, widthPixels, heightPixels));
+			currPtr->setOrigin(static_cast<float>(widthPixels) / 2.f, static_cast<float>(heightPixels) / 2.f);
+			//currPtr->setPosition(0.f, 0.f);
 			playerSpriteSheet.emplace_back(currPtr);
 		}
 	}
 }
 
-ee::Player::Player(const sf::Texture& texture, int widthPixels, int heightPixels) : Actor(5.0f), playerSpriteSheet()
+ee::Player::Player(const sf::Texture& texture, int widthPixels, int heightPixels) : 
+	Actor(5.0f), 
+	playerSpriteSheet(),
+	unscaledSize(widthPixels, heightPixels)
 {
 	initSpriteSheet(texture, widthPixels, heightPixels);
 	spriteIndex = 0;
@@ -311,29 +316,36 @@ void ee::Player::getInNearbyVehicle()
 
 void ee::Player::updateCollisionBoxes(const float deltaX, const float deltaY) const
 {
-	//TODO implement
 	if (currentSprite) {
-		if (const sf::Texture* text = currentSprite->getTexture()) {
-			float scaleX = currentSprite->getScale().x;
-			float scaleY = currentSprite->getScale().y;
-			float scaledWidth = text->getSize().x * scaleX; // ADD DELTA X, and this should be the POSITION + texture size TODO start here!
-			float scaledHeight = text->getSize().y * scaleY;
+		if (const sf::Texture* texture = currentSprite->getTexture()) {
+			//float scaleX = currentSprite->getScale().x;
+			//float scaleY = currentSprite->getScale().y;
 
-			//sf::Vector2f futurePnt = currentSprite->getPosition();
-			sf::Vector2f futurePnt(deltaX, deltaY);
-			//futurePnt.x += deltaX; TODO: remove; transform should calculate the current position?
-			//futurePnt.y += deltaY;
+			////sprite doesn't use entire size of texture, therefore cannot simply scale based on texture size
+			//float scaledWidth = unscaledSize.x * scaleX; 
+			//float scaledHeight = unscaledSize.y * scaleY;
 
-			//deltaX is used to calculate the future position of the move, topLeft would be 0 , 0 but instead is 0+ deltaX, 0 + deltaY
-			sf::Vector2f topLeft = currentSprite->getTransform().transformPoint(sf::Vector2f(futurePnt.x, futurePnt.y));
-			sf::Vector2f topRight = currentSprite->getTransform().transformPoint(sf::Vector2f(scaledWidth + futurePnt.x, futurePnt.y));
-			sf::Vector2f bottomLeft = currentSprite->getTransform().transformPoint(sf::Vector2f(futurePnt.x, scaledHeight + futurePnt.y));
-			sf::Vector2f bottomRight = currentSprite->getTransform().transformPoint(sf::Vector2f(scaledWidth + futurePnt.x, scaledHeight + futurePnt.y));
+			//TODO move the definitions inside of the constructor and elimiate previous variables when they're no longer needed
+			sf::Vector2f unscaledSize(static_cast<float>(unscaledSize.x), static_cast<float>(unscaledSize.y));
+			sf::Vector2f deltaXY(deltaX, deltaY);
 
-			vector2fToPnt(topLeft, collisionBoxes[0].pntTopLeft);
-			vector2fToPnt(topRight, collisionBoxes[0].pntTopRight);
-			vector2fToPnt(bottomLeft, collisionBoxes[0].pntBottomLeft);
-			vector2fToPnt(bottomRight, collisionBoxes[0].pntBottomRight);
+			rectFromCenteredTransform(collisionBoxes[0], *currentSprite, deltaXY, unscaledSize);
+
+			////sf::Vector2f futurePnt = currentSprite->getPosition();
+			//sf::Vector2f futurePnt(deltaX, deltaY);
+			////futurePnt.x += deltaX; TODO: remove; transform should calculate the current position?
+			////futurePnt.y += deltaY;
+
+			////deltaX is used to calculate the future position of the move, topLeft would be 0 , 0 but instead is 0+ deltaX, 0 + deltaY
+			//sf::Vector2f topLeft = currentSprite->getTransform().transformPoint(sf::Vector2f(futurePnt.x, futurePnt.y));
+			//sf::Vector2f topRight = currentSprite->getTransform().transformPoint(sf::Vector2f(scaledWidth + futurePnt.x, futurePnt.y));
+			//sf::Vector2f bottomLeft = currentSprite->getTransform().transformPoint(sf::Vector2f(futurePnt.x, scaledHeight + futurePnt.y));
+			//sf::Vector2f bottomRight = currentSprite->getTransform().transformPoint(sf::Vector2f(scaledWidth + futurePnt.x, scaledHeight + futurePnt.y));
+
+			//vector2fToPnt(topLeft, collisionBoxes[0].pntTopLeft);
+			//vector2fToPnt(topRight, collisionBoxes[0].pntTopRight);
+			//vector2fToPnt(bottomLeft, collisionBoxes[0].pntBottomLeft);
+			//vector2fToPnt(bottomRight, collisionBoxes[0].pntBottomRight);
 		}
 	}
 }

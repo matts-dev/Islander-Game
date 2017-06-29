@@ -40,7 +40,7 @@ namespace ee {
 
 		/**convert x and y coordinate into a single short for indexing*/
 		short getPosKey(char x, char y);
-	public:
+	public:	
 		Ship();
 		virtual ~Ship();
 

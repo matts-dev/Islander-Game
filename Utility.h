@@ -28,8 +28,7 @@ namespace ee {
 				Point pntTopRight;
 				Point pntBottomRight;
 				Point pntBottomLeft;
-				float rotation;
-				Rect() : pntTopLeft(), pntTopRight(), pntBottomRight(), pntBottomLeft(), rotation(0) {}
+				Rect() : pntTopLeft(), pntTopRight(), pntBottomRight(), pntBottomLeft() {}
 			};
 
 			/** slope intercept line */
@@ -45,7 +44,7 @@ namespace ee {
 				float maxX;
 			};
 
-			bool collision(const Rect& first, const Rect& second);
+			bool collision(const Rect& first, const Rect& second); //TODO update const correctness
 			bool rectToSegments(const Rect& points, std::vector<Segment>& segBuffer);
 			bool createSegment(const Point& pnt1, const Point& pnt2, Segment& segBuffer);
 			bool createLine(const Point& pnt1, const Point& pnt2, Line& bufferLine);
@@ -53,6 +52,8 @@ namespace ee {
 			bool lineIntersects(const Line& line1, const Line& line2, Point& bufferForResult);
 
 			void vector2fToPnt(const sf::Vector2f & vec2, Point & pointToUpdate);
+
+			bool rectangleEnclosed(const Rect& first, const Rect& second);
 		}
 	}
 }

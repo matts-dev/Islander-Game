@@ -17,7 +17,7 @@ bool ee::utility::mxb::collision(const Rect& first, const Rect& second)
 			}
 		}
 	}
-	return false;
+	return rectangleEnclosed(first, second);
 }
 
 bool ee::utility::mxb::rectToSegments(const Rect & points, std::vector<Segment>& segBuffer)
@@ -102,6 +102,17 @@ void ee::utility::mxb::vector2fToPnt(const sf::Vector2f & vec2, Point & pointToU
 {
 	pointToUpdate.x = vec2.x;
 	pointToUpdate.y = vec2.y;
+}
+
+bool ee::utility::mxb::rectangleEnclosed(const Rect & first, const Rect & second)
+{
+	//TODO implement, using width/height, a check to determine if any point is 
+	//within the hypotenuse distance (the angle between the furthest points in a rectangle)
+	//if a point is within this distance to all other points, then it is contained within the rectangle 
+	//eg 10x10 sqaure, if a point is 5 away from all 4 points, then it is contained in the sqaure
+	//NOTE: since the intersections are checked first, I may only need to write a function to 
+	//check an individual point (since there cannot be any points within or points outside)
+	return false;
 }
 
 bool ee::utility::floatIsZero(const float value, const float delta)

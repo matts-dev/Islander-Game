@@ -57,7 +57,7 @@ namespace ee {
 		//TODO refactor collision box stuff to an interface to reduce the actor class?
 		virtual bool collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX = 0, const float deltaY = 0) const = 0;
 		virtual void updateCollisionBoxes(const float deltaX, const float deltaY) const = 0;
-		void rectFromTransform(utility::mxb::Rect& buffer, const sf::Transform& transform, const sf::Vector2f& deltaXY, sf::Vector2f& scaledSizeXY) const;
+		bool rectFromCenteredTransform(utility::mxb::Rect& buffer, const sf::Transformable& transformable, const sf::Vector2f& deltaXY, sf::Vector2f& unscaledSizeXY) const;
 		virtual const std::vector<utility::mxb::Rect>& getCollisionRect(const float deltaX = 0, const float deltaY = 0) const;
 		virtual void prepareCollisionBoxes() const = 0;
 	};
