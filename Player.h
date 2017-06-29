@@ -67,7 +67,7 @@ namespace ee {
 		bool validMoveDelta(const float deltaX, const float deltaY);
 
 		virtual bool collides(const std::shared_ptr<const Actor>& otherActor, const float deltaX = 0, const float deltaY = 0) const override;
-		virtual void prepareCollisionBoxes() const;
+		virtual void prepareCollisionBoxes() const override;
 
 	};
 };

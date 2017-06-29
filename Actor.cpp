@@ -1,6 +1,7 @@
 #include "Actor.h"
 #include"SpatialHash.h"
 #include "Defs.h"
+#include <cmath>
 
 std::unique_ptr<ee::SpatialHash> ee::Actor::spatialHash = nullptr;
 void ee::Actor::initSpatialHash(const int gridSize, const int tableSize)
