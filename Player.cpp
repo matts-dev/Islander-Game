@@ -326,7 +326,7 @@ void ee::Player::updateCollisionBoxes(const float deltaX, const float deltaY) co
 			//float scaledHeight = unscaledSize.y * scaleY;
 
 			//TODO move the definitions inside of the constructor and elimiate previous variables when they're no longer needed
-			sf::Vector2f unscaledSize(static_cast<float>(unscaledSize.x), static_cast<float>(unscaledSize.y));
+			sf::Vector2f unscaledSize(static_cast<float>(this->unscaledSize.x), static_cast<float>(this->unscaledSize.y));
 			sf::Vector2f deltaXY(deltaX, deltaY);
 
 			rectFromCenteredTransform(collisionBoxes[0], *currentSprite, deltaXY, unscaledSize);
