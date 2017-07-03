@@ -209,7 +209,7 @@ bool ee::utility::mxb::lineIntersects(const Line& line1, const Line& line2, Poin
 		return true;
 	}
 	//if either are vertical, but not both vertical 
-	else if (line1.isVertical || line2.isVertical && !(line1.isVertical && line2.isVertical)) {
+	else if ((line1.isVertical || line2.isVertical) && !(line1.isVertical && line2.isVertical)) {
 		//vertical lines will have a zero slope, which can make lines appear parallel when they're actually perpendicular
 		if (line1.isVertical) {
 			//line1 is defined entirely by an x value, thus it must be the x value of the intersection

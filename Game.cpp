@@ -57,7 +57,7 @@ void ee::Game::io()
 	ioMovement();
 	ioInteraction();
 	if (developerMode) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
 			//for now will be the first ship of the game
 			auto actorPtr = nonPlayerActors[0];
 			auto shipPtr = std::dynamic_pointer_cast<Ship>(actorPtr);
@@ -66,7 +66,7 @@ void ee::Game::io()
 				shipPtr->setRotation(rot + 3.f);
 			}
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 			//for now will be the first ship of the game
 			auto actorPtr = nonPlayerActors[0];
 			auto shipPtr = std::dynamic_pointer_cast<Ship>(actorPtr);
